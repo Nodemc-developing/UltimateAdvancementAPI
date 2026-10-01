@@ -17,12 +17,7 @@ import com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils;
 import com.fren_gor.ultimateAdvancementAPI.util.AfterHandle;
 import com.fren_gor.ultimateAdvancementAPI.visibilities.IVisibility;
 import com.google.common.base.Preconditions;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.HoverEvent.Action;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -244,20 +239,7 @@ public abstract class Advancement {
     @Nullable
     public BaseComponent[] getAnnounceMessage(@NotNull Player player) {
         Preconditions.checkNotNull(player, "Player is null.");
-        ChatColor color = display.getFrame().getColor();
-        return new ComponentBuilder(player.getName() + ' ' + display.getFrame().getChatText() + ' ')
-            .color(ChatColor.WHITE)
-            .append(new ComponentBuilder("[")
-                    .color(color)
-                    .event(new HoverEvent(Action.SHOW_TEXT, display.getChatDescription()))
-                    .create()
-                , FormatRetention.NONE)
-            .append(display.getChatTitle(), FormatRetention.EVENTS)
-            .append(new ComponentBuilder("]")
-                    .color(color)
-                    .create()
-                , FormatRetention.EVENTS)
-            .create();
+        return com.fren_gor.ultimateAdvancementAPI.util.AdvancementMessages.announcement(player.getName(), display);
     }
 
     /**
@@ -520,7 +502,7 @@ public abstract class Advancement {
      * @param player The player the toast will be shown to.
      */
     public void displayToastToPlayer(@NotNull Player player) {
-        AdvancementUtils.displayToast(player, display.getIcon(), display.getTitle(), display.getFrame());
+        AdvancementUtils.displayToast(player, display);
     }
 
     /**

@@ -36,11 +36,13 @@ Normal updates compare each player's previously sent state. An unchanged definit
 
 The optional three-argument `registerAdvancements(root, children, true)` applies deterministic tree layout before native wrappers are created: depth determines columns, leaves receive distinct rows and parents are centered over their children. Existing explicit coordinates remain the default. Component-based displays preserve translation components when `usesComponentDisplay()` is enabled.
 
+Toast definitions retain component-based titles and descriptions. Chat announcements use the vanilla `chat.type.advancement.*` translation keys, so each receiving client renders both the sentence and title in its own language.
+
 The 26.3 adapter handles positioned advancement definitions and the changed native display and advancement-tree APIs.
 
 ## Verification scope
 
-The common suite contains 30 tests covering queue saturation, atomic increments, transaction rollback, shutdown persistence, pending rewards, member iteration and client deltas, alongside the original API tests.
+The common suite contains 33 tests covering queue saturation, atomic increments, transaction rollback, shutdown persistence, pending rewards, member iteration, client deltas and localized notifications, alongside the original API tests.
 
 Integration verification targets Paper 26.3 build 140 and Folia 26.2 build 7 with CraftEngine 26.10-SNAPSHOT and Farmersdelight-Plugin-Pro. It checks native packet encoding, translated components, all 23 Farmersdelight advancement nodes, progress persisted from two region tasks, custom progression callbacks and pending-reward cleanup.
 

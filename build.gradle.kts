@@ -51,6 +51,7 @@ val modernSources = tasks.register<Zip>("modernSources") {
     destinationDirectory.set(layout.buildDirectory.dir("libs"))
     from(rootDir) {
         exclude(".git/**", "**/.gradle/**", "**/build/**", "**/target/**", "**/.local/**", ".idea/**", "**/*.iml", "**/*.log", "**/__pycache__/**", "**/*.pyc")
+        filesMatching("gradlew") { permissions { unix("rwxr-xr-x") } }
     }
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true

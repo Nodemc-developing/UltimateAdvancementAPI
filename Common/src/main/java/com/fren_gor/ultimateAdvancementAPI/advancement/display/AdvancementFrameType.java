@@ -98,4 +98,14 @@ public enum AdvancementFrameType {
     public String getChatText() {
         return chatText;
     }
+
+    /** Gets the vanilla announcement translation key, resolved by each receiving client. */
+    @NotNull
+    public String getChatTranslationKey() {
+        return switch (this) {
+            case TASK -> "chat.type.advancement.task";
+            case GOAL -> "chat.type.advancement.goal";
+            case CHALLENGE -> "chat.type.advancement.challenge";
+        };
+    }
 }

@@ -86,6 +86,19 @@ public class AdvancementUtils {
         }
     }
 
+    /** Displays a toast using the original display's component title and description. */
+    public static void displayToast(@NotNull Player player, @NotNull AdvancementDisplay display) {
+        Preconditions.checkNotNull(player, "Player is null.");
+        Preconditions.checkNotNull(display, "AdvancementDisplay is null.");
+        try {
+            AdvancementWrapper notification = AdvancementWrapper.craftBaseAdvancement(NOTIFICATION_KEY, ROOT, display.getToastNMSWrapper(), 1);
+            PacketPlayOutAdvancementsWrapper.craftSendPacket(Map.of(ROOT, 1, notification, 1)).sendTo(player);
+            PacketPlayOutAdvancementsWrapper.craftRemovePacket(Set.of(ROOT_KEY, NOTIFICATION_KEY)).sendTo(player);
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
+    }
+
     /*public static void displayToast(@NotNull Player player, @NotNull ItemStack icon, @NotNull String title, @NotNull AdvancementFrameType frame, @NotNull Advancement base) {
         Preconditions.checkNotNull(player, "Player is null.");
         Preconditions.checkNotNull(icon, "Icon is null.");
@@ -119,7 +132,7 @@ public class AdvancementUtils {
         final MinecraftKeyWrapper keyWrapper = getUniqueKey(advancement.getAdvancementTab()).getNMSWrapper();
 
         try {
-            AdvancementDisplayWrapper displayWrapper = AdvancementDisplayWrapper.craft(display.getIcon(), display.getTitle(), ADV_DESCRIPTION, display.getFrame().getNMSWrapper(), 0, 0, true, false, false);
+            AdvancementDisplayWrapper displayWrapper = display.getToastNMSWrapper();
             AdvancementWrapper advWrapper = AdvancementWrapper.craftBaseAdvancement(keyWrapper, advancement.getNMSWrapper(), displayWrapper, 1);
 
             PacketPlayOutAdvancementsWrapper.craftSendPacket(Map.of(advWrapper, 1)).sendTo(player);

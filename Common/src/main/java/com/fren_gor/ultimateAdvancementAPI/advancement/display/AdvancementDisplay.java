@@ -3,6 +3,7 @@ package com.fren_gor.ultimateAdvancementAPI.advancement.display;
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.RootAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.nms.wrappers.advancement.AdvancementDisplayWrapper;
+import com.fren_gor.ultimateAdvancementAPI.util.AdvancementMessages;
 import com.google.common.base.Preconditions;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -323,6 +324,16 @@ public class AdvancementDisplay {
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /** Creates a temporary toast definition while retaining component-based translations. */
+    @NotNull
+    public AdvancementDisplayWrapper getToastNMSWrapper() throws ReflectiveOperationException {
+        if (usesComponentDisplay()) {
+            return AdvancementDisplayWrapper.craft(icon, AdvancementMessages.toastTitle(this),
+                    new TextComponent(getChatDescription()), frame.getNMSWrapper(), 0, 0, true, false, false);
+        }
+        return AdvancementDisplayWrapper.craft(icon, title, "\n§7A notification.", frame.getNMSWrapper(), 0, 0, true, false, false);
     }
 
     /**
