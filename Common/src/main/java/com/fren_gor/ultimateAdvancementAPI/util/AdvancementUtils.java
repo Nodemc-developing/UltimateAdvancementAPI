@@ -20,7 +20,6 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -242,8 +241,8 @@ public class AdvancementUtils {
     }
 
     public static void checkSync() {
-        if (!Bukkit.isPrimaryThread())
-            throw new AsyncExecutionException("Illegal async method call. This method can be called only from the main thread.");
+        if (!SchedulerSupport.isTickThread())
+            throw new AsyncExecutionException("Illegal async method call. Use the server tick scheduler or the owning player's entity scheduler.");
     }
 
     public static void runSync(@NotNull AdvancementMain main, @NotNull Runnable runnable) {
@@ -261,7 +260,7 @@ public class AdvancementUtils {
     public static void runSync(@NotNull Plugin plugin, long delay, @NotNull Runnable runnable) {
         Preconditions.checkNotNull(plugin, "Plugin is null.");
         Preconditions.checkNotNull(runnable, "Runnable is null.");
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, runnable, delay);
+        SchedulerSupport.global(plugin, delay, runnable);
     }
 
     @NotNull

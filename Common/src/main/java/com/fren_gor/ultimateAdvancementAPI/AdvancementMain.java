@@ -19,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.plugin.Plugin;
@@ -32,7 +33,8 @@ import org.jetbrains.annotations.UnmodifiableView;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +43,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
+import com.fren_gor.ultimateAdvancementAPI.nms.wrappers.MinecraftKeyWrapper;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
@@ -62,8 +66,9 @@ public final class AdvancementMain {
     private DatabaseManager databaseManager;
     private BukkitLibraryManager libbyManager;
     private final String libFolder;
-    private final Map<String, AdvancementTab> tabs = new HashMap<>();
-    private final Map<Plugin, List<AdvancementTab>> pluginMap = new HashMap<>();
+    private final Map<String, AdvancementTab> tabs = new ConcurrentHashMap<>();
+    private final Map<Plugin, List<AdvancementTab>> pluginMap = new ConcurrentHashMap<>();
+    private final Map<String, Map<UUID, Set<MinecraftKeyWrapper>>> preservedClientKeys = new ConcurrentHashMap<>();
 
     /**
      * Creates a new {@code AdvancementMain}.
@@ -116,6 +121,7 @@ public final class AdvancementMain {
 
         }
 
+        com.fren_gor.ultimateAdvancementAPI.nms.wrappers.VanillaAdvancementDisablerWrapper.setPlayerDispatcher((player, task) -> com.fren_gor.ultimateAdvancementAPI.util.SchedulerSupport.player(owningPlugin, player, 0, task));
         libbyManager = new BukkitLibraryManager(owningPlugin, libFolder);
         libbyManager.addMavenCentral();
     }
@@ -226,6 +232,7 @@ public final class AdvancementMain {
 
     private void commonEnablePostDatabase() {
         eventManager.register(this, PluginDisableEvent.class, EventPriority.HIGHEST, e -> unregisterAdvancementTabs(e.getPlugin()));
+        eventManager.register(this, PlayerQuitEvent.class, e -> preservedClientKeys.values().forEach(keys -> keys.remove(e.getPlayer().getUniqueId())));
 
         // Resend advancements if /minecraft:reload is called
         eventManager.register(this, ServerCommandEvent.class, e -> {
@@ -270,6 +277,7 @@ public final class AdvancementMain {
             if (eventManager != null)
                 eventManager.disable();
             pluginMap.clear();
+            preservedClientKeys.clear();
             Iterator<AdvancementTab> it = tabs.values().iterator();
             while (it.hasNext()) {
                 try {
@@ -299,7 +307,7 @@ public final class AdvancementMain {
      */
     @NotNull
     @Contract("_, _ -> new")
-    public AdvancementTab createAdvancementTab(@NotNull Plugin plugin, @NotNull String namespace) throws DuplicatedException {
+    public synchronized AdvancementTab createAdvancementTab(@NotNull Plugin plugin, @NotNull String namespace) throws DuplicatedException {
         checkInitialisation();
         Preconditions.checkNotNull(plugin, "Plugin is null.");
         Preconditions.checkNotNull(namespace, "Namespace is null.");
@@ -308,8 +316,10 @@ public final class AdvancementMain {
         }
 
         AdvancementTab tab = new AdvancementTab(plugin, databaseManager, namespace);
+        Map<UUID, Set<MinecraftKeyWrapper>> previous = preservedClientKeys.remove(namespace);
+        if (previous != null) tab.restoreClientKeys(previous);
         tabs.put(namespace, tab);
-        pluginMap.computeIfAbsent(plugin, p -> new LinkedList<>()).add(tab);
+        pluginMap.computeIfAbsent(plugin, p -> new CopyOnWriteArrayList<>()).add(tab);
         return tab;
     }
 
@@ -366,11 +376,19 @@ public final class AdvancementMain {
      * @see UltimateAdvancementAPI#unregisterAdvancementTab(String)
      */
     public void unregisterAdvancementTab(@NotNull String namespace) {
+        unregisterAdvancementTab(namespace, true);
+    }
+
+    public synchronized void unregisterAdvancementTab(@NotNull String namespace, boolean removeClient) {
         checkInitialisation();
         Preconditions.checkNotNull(namespace, "Namespace is null.");
         AdvancementTab tab = tabs.remove(namespace);
-        if (tab != null)
-            tab.dispose();
+        if (tab != null) {
+            if (!removeClient) preservedClientKeys.put(namespace, tab.snapshotClientKeys());
+            else preservedClientKeys.remove(namespace);
+            pluginMap.values().forEach(list -> list.remove(tab));
+            tab.dispose(removeClient);
+        }
     }
 
     /**
@@ -627,7 +645,7 @@ public final class AdvancementMain {
 
     // Just a copy-paste from AdvancementUtils to avoid loading it before checking that the current mc version is supported
     private static void checkSync() {
-        if (!Bukkit.isPrimaryThread())
+        if (!com.fren_gor.ultimateAdvancementAPI.util.SchedulerSupport.isTickThread())
             throw new AsyncExecutionException("Illegal async method call. This method can be called only from the main thread.");
     }
 }

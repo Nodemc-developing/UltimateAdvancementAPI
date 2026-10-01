@@ -10,6 +10,13 @@ import java.lang.reflect.Modifier;
  * Class to disable vanilla advancements.
  */
 public class VanillaAdvancementDisablerWrapper {
+    private static java.util.function.BiConsumer<org.bukkit.entity.Player, Runnable> playerDispatcher = (player, task) -> task.run();
+
+    public static void setPlayerDispatcher(java.util.function.BiConsumer<org.bukkit.entity.Player, Runnable> dispatcher) {
+        playerDispatcher = java.util.Objects.requireNonNull(dispatcher);
+    }
+
+    protected static void runForPlayer(org.bukkit.entity.Player player, Runnable task) { playerDispatcher.accept(player, task); }
 
     private static Method method;
 

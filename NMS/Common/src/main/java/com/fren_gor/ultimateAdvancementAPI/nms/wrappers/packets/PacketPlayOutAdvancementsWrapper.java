@@ -15,6 +15,7 @@ import java.util.Set;
 public abstract class PacketPlayOutAdvancementsWrapper implements ISendable {
 
     private static Constructor<? extends PacketPlayOutAdvancementsWrapper> resetConstructor, sendConstructor, removeConstructor;
+    private static Constructor<? extends PacketPlayOutAdvancementsWrapper> updateConstructor;
 
     static {
         var clazz = ReflectionUtil.getWrapperClass(PacketPlayOutAdvancementsWrapper.class);
@@ -34,6 +35,8 @@ public abstract class PacketPlayOutAdvancementsWrapper implements ISendable {
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         }
+        try { updateConstructor = clazz.getDeclaredConstructor(Map.class, Set.class, Map.class); }
+        catch (NoSuchMethodException ignored) { }
     }
 
     /**
@@ -69,5 +72,17 @@ public abstract class PacketPlayOutAdvancementsWrapper implements ISendable {
     @NotNull
     public static PacketPlayOutAdvancementsWrapper craftRemovePacket(@NotNull Set<MinecraftKeyWrapper> toRemove) throws ReflectiveOperationException {
         return removeConstructor.newInstance(toRemove);
+    }
+
+    public static ISendable craftUpdatePacket(Map<AdvancementWrapper, Integer> added, Set<MinecraftKeyWrapper> removed, Map<AdvancementWrapper, Integer> progress) throws ReflectiveOperationException {
+        if (updateConstructor != null) return updateConstructor.newInstance(added, removed, progress);
+        Map<AdvancementWrapper, Integer> changed = new java.util.HashMap<>(progress);
+        changed.putAll(added);
+        ISendable additions = changed.isEmpty() ? null : craftSendPacket(changed);
+        ISendable removals = removed.isEmpty() ? null : craftRemovePacket(removed);
+        return player -> {
+            if (removals != null) removals.sendTo(player);
+            if (additions != null) additions.sendTo(player);
+        };
     }
 }

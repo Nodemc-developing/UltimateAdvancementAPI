@@ -2,7 +2,9 @@ main: com.fren_gor.ultimateAdvancementAPI.AdvancementPlugin
 name: UltimateAdvancementAPI
 version: ${project.version}
 description: ${project.description}
-authors: [ fren_gor, EscanorTargaryen ]
+authors: [ fren_gor, EscanorTargaryen, ydxc2009 ]
 website: ${project.url}
 load: STARTUP
 api-version: 1.15
+
+folia-supported: true

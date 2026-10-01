@@ -21,6 +21,7 @@ public class BStats {
     private static final Map<String, Map<String, Integer>> apiMcVersions = new HashMap<>(), apiNMSVersions = new HashMap<>();
 
     public static void init(@NotNull AdvancementPlugin plugin) {
+        if (com.fren_gor.ultimateAdvancementAPI.util.SchedulerSupport.isFolia()) return;
         @Nullable String versionsRange = Versions.getNMSVersionsRange();
 
         Metrics metrics = new Metrics(plugin, BSTATS_ID);

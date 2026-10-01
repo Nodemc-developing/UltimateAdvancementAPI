@@ -10,7 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
+import com.fren_gor.ultimateAdvancementAPI.util.SchedulerSupport;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
@@ -100,17 +100,14 @@ public class AdvancementPlugin extends JavaPlugin {
         }
 
         if (configManager.getDisableVanillaAdvancements() || configManager.getDisableVanillaRecipeAdvancements()) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
+            SchedulerSupport.global(this, 20, () -> {
                     try {
                         VanillaAdvancementDisablerWrapper.disableVanillaAdvancements(configManager.getDisableVanillaAdvancements(), configManager.getDisableVanillaRecipeAdvancements());
                     } catch (Exception e) {
                         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[UltimateAdvancementAPI] Couldn't disable vanilla advancements:");
                         e.printStackTrace();
                     }
-                }
-            }.runTaskLater(this, 20);
+            });
         }
 
         BStats.init(this);
@@ -135,7 +132,7 @@ public class AdvancementPlugin extends JavaPlugin {
     }
 
     private void checkForUpdates() {
-        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+        SchedulerSupport.async(this, () -> {
             try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + RESOURCE_ID).openStream();
                  Scanner scanner = new Scanner(inputStream)) {
                 if (scanner.hasNextLine()) {

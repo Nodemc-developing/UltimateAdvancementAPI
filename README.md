@@ -11,6 +11,8 @@
 
 A powerful API to create custom advancements for your Minecraft server.
 
+This fork also provides a Gradle-built modern distribution with Folia scheduling, ordered database persistence and Minecraft 26.3 support. See [MODERN_BUILD.md](MODERN_BUILD.md) for build instructions and the compatibility and verification scope.
+
 ![Advancement Tab Image](https://github.com/frengor/UltimateAdvancementAPI/wiki/images/spigot-photo.png)
 
 > [!IMPORTANT]

@@ -2,6 +2,7 @@ package com.fren_gor.ultimateAdvancementAPI.database.impl;
 
 import com.fren_gor.ultimateAdvancementAPI.AdvancementMain;
 import com.fren_gor.ultimateAdvancementAPI.database.IDatabase;
+import com.fren_gor.ultimateAdvancementAPI.database.AdvancementUpdate;
 import com.fren_gor.ultimateAdvancementAPI.database.TeamProgression;
 import com.fren_gor.ultimateAdvancementAPI.exceptions.IllegalKeyException;
 import com.fren_gor.ultimateAdvancementAPI.exceptions.UserNotRegisteredException;
@@ -331,6 +332,29 @@ public class MySQL implements IDatabase {
                     ps.execute();
                 }
             }
+        }
+    }
+
+    @Override
+    public void updateAdvancements(List<AdvancementUpdate> updates) throws SQLException {
+        try (Connection connection = openConnection()) {
+            boolean autoCommit = connection.getAutoCommit();
+            connection.setAutoCommit(false);
+            try (PreparedStatement upsert = connection.prepareStatement("INSERT INTO `Advancements` (`Namespace`, `Key`, `TeamID`, `Progression`) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE `Progression`=VALUES(`Progression`);");
+                 PreparedStatement delete = connection.prepareStatement("DELETE FROM `Advancements` WHERE `Namespace`=? AND `Key`=? AND `TeamID`=?;")) {
+                for (AdvancementUpdate update : updates) {
+                    PreparedStatement statement = update.progression() == 0 ? delete : upsert;
+                    statement.setString(1, update.key().getNamespace());
+                    statement.setString(2, update.key().getKey());
+                    statement.setInt(3, update.teamId());
+                    if (update.progression() != 0) statement.setInt(4, update.progression());
+                    statement.executeUpdate();
+                }
+                connection.commit();
+            } catch (SQLException error) {
+                connection.rollback();
+                throw error;
+            } finally { connection.setAutoCommit(autoCommit); }
         }
     }
 

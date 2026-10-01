@@ -137,6 +137,10 @@ public final class UltimateAdvancementAPI {
         getMain().unregisterAdvancementTab(namespace);
     }
 
+    public void unregisterAdvancementTab(@NotNull String namespace, boolean removeClient) {
+        getMain().unregisterAdvancementTab(namespace, removeClient);
+    }
+
     /**
      * Unregisters all the advancement tabs owned by the provided plugin.
      *

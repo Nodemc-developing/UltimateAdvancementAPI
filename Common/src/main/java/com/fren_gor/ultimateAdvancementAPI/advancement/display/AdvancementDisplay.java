@@ -78,12 +78,12 @@ public class AdvancementDisplay {
     /**
      * The advancement x coordinate.
      */
-    protected final float x;
+    protected float x;
 
     /**
      * The advancement y coordinate.
      */
-    protected final float y;
+    protected float y;
 
     /**
      * Creates a new {@code AdvancementDisplay}.
@@ -311,6 +311,10 @@ public class AdvancementDisplay {
         Preconditions.checkNotNull(advancement, "Advancement is null.");
         AdvancementDisplayWrapper wrapper;
         try {
+            if (usesComponentDisplay()) {
+                String background = advancement instanceof RootAdvancement root ? root.getBackgroundTexture() : null;
+                return AdvancementDisplayWrapper.craft(icon, new net.md_5.bungee.api.chat.TextComponent(getChatTitle()), new net.md_5.bungee.api.chat.TextComponent(getChatDescription()), frame.getNMSWrapper(), x, y, background);
+            }
             if (advancement instanceof RootAdvancement root) {
                 return AdvancementDisplayWrapper.craft(icon, title, compactDescription, frame.getNMSWrapper(), x, y, root.getBackgroundTexture());
             } else {
@@ -388,6 +392,15 @@ public class AdvancementDisplay {
      */
     public float getY() {
         return y;
+    }
+
+    public boolean usesComponentDisplay() { return false; }
+
+    /** Sets layout coordinates before the advancement's NMS wrapper is constructed. */
+    public void setCoordinates(float x, float y) {
+        Preconditions.checkArgument(Float.isFinite(x) && Float.isFinite(y) && x >= 0 && y >= 0, "Invalid advancement coordinates");
+        this.x = x;
+        this.y = y;
     }
 
     /**

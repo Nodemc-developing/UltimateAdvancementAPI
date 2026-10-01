@@ -65,7 +65,7 @@ public class BaseAdvancement extends Advancement {
      */
     @Override
     @NotNull
-    public AdvancementWrapper getNMSWrapper() {
+    public synchronized AdvancementWrapper getNMSWrapper() {
         if (wrapper != null) {
             return wrapper;
         }

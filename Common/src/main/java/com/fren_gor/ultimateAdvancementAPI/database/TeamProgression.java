@@ -24,7 +24,6 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.uuidFromPlayer;
-import static com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.validateProgressionValue;
 
 /**
  * The {@code TeamProgression} class stores information about a team and its advancement progressions.
@@ -36,6 +35,7 @@ public final class TeamProgression {
     final AtomicBoolean inCache = new AtomicBoolean(false);
     private final int teamId;
     private final Set<UUID> players;
+    private volatile Set<UUID> memberSnapshot;
     private final Map<AdvancementKey, Integer> advancements;
 
     /**
@@ -54,6 +54,7 @@ public final class TeamProgression {
         this.teamId = teamId;
         players = new HashSet<>();
         players.add(member);
+        memberSnapshot = Set.copyOf(players);
     }
 
     /**
@@ -74,6 +75,7 @@ public final class TeamProgression {
         this.teamId = teamId;
         players = Sets.newHashSetWithExpectedSize(members.size() + 4);
         players.addAll(members);
+        memberSnapshot = Set.copyOf(players);
     }
 
     private void validateCaller(@NotNull Class<?> caller) throws IllegalOperationException {
@@ -122,9 +124,7 @@ public final class TeamProgression {
      */
     @Contract(pure = true, value = "null -> false")
     public boolean contains(UUID uuid) {
-        synchronized (players) {
-            return players.contains(uuid);
-        }
+        return uuid != null && memberSnapshot.contains(uuid);
     }
 
     /**
@@ -134,9 +134,7 @@ public final class TeamProgression {
      */
     @Contract(pure = true, value = "-> new")
     public Set<@NotNull UUID> getMembersCopy() {
-        synchronized (players) {
-            return new HashSet<>(players);
-        }
+        return new HashSet<>(memberSnapshot);
     }
 
     /**
@@ -147,9 +145,7 @@ public final class TeamProgression {
     @Contract(pure = true)
     @Range(from = 0, to = Integer.MAX_VALUE)
     public int getSize() {
-        synchronized (players) {
-            return players.size();
-        }
+        return memberSnapshot.size();
     }
 
     /**
@@ -159,10 +155,8 @@ public final class TeamProgression {
      */
     public void forEachMember(@NotNull Consumer<UUID> action) {
         Preconditions.checkNotNull(action, "Consumer is null.");
-        synchronized (players) {
-            for (UUID u : players) {
-                action.accept(u);
-            }
+        for (UUID u : memberSnapshot) {
+            action.accept(u);
         }
     }
 
@@ -175,14 +169,12 @@ public final class TeamProgression {
      */
     public boolean everyMemberMatch(@NotNull Predicate<UUID> action) {
         Preconditions.checkNotNull(action, "Predicate is null.");
-        synchronized (players) {
-            for (UUID u : players) {
-                if (!action.test(u)) {
-                    return false;
-                }
+        for (UUID u : memberSnapshot) {
+            if (!action.test(u)) {
+                return false;
             }
-            return true;
         }
+        return true;
     }
 
     /**
@@ -194,14 +186,12 @@ public final class TeamProgression {
      */
     public boolean anyMemberMatch(@NotNull Predicate<UUID> action) {
         Preconditions.checkNotNull(action, "Predicate is null.");
-        synchronized (players) {
-            for (UUID u : players) {
-                if (action.test(u)) {
-                    return true;
-                }
+        for (UUID u : memberSnapshot) {
+            if (action.test(u)) {
+                return true;
             }
-            return false;
         }
+        return false;
     }
 
     /**
@@ -213,14 +203,12 @@ public final class TeamProgression {
      */
     public boolean noMemberMatch(@NotNull Predicate<UUID> action) {
         Preconditions.checkNotNull(action, "Predicate is null.");
-        synchronized (players) {
-            for (UUID u : players) {
-                if (action.test(u)) {
-                    return false;
-                }
+        for (UUID u : memberSnapshot) {
+            if (action.test(u)) {
+                return false;
             }
-            return true;
         }
+        return true;
     }
 
     /**
@@ -242,10 +230,12 @@ public final class TeamProgression {
      * @return The previous progression.
      */
     int updateProgression(@NotNull AdvancementKey key, @Range(from = 0, to = Integer.MAX_VALUE) int progression) {
-        validateProgressionValue(progression);
+        Preconditions.checkArgument(progression >= 0, "Progression cannot be negative.");
         Integer i = advancements.put(key, progression);
         return i == null ? 0 : i;
     }
+
+    int getStoredProgression(AdvancementKey key) { return advancements.getOrDefault(key, 0); }
 
     /**
      * Removes the provided player from the team.
@@ -255,6 +245,7 @@ public final class TeamProgression {
     void removeMember(UUID uuid) {
         synchronized (players) {
             players.remove(uuid);
+            memberSnapshot = Set.copyOf(players);
         }
     }
 
@@ -267,6 +258,7 @@ public final class TeamProgression {
         Preconditions.checkNotNull(uuid, "UUID is null.");
         synchronized (players) {
             players.add(uuid);
+            memberSnapshot = Set.copyOf(players);
         }
     }
 
@@ -278,9 +270,7 @@ public final class TeamProgression {
      */
     @Nullable
     public UUID getAMember() {
-        synchronized (players) {
-            return Iterables.getFirst(players, null);
-        }
+        return Iterables.getFirst(memberSnapshot, null);
     }
 
     /**
@@ -292,11 +282,9 @@ public final class TeamProgression {
     @Nullable
     public Player getAnOnlineMember(@NotNull DatabaseManager manager) {
         Preconditions.checkNotNull(manager, "DatabaseManager is null.");
-        synchronized (players) {
-            for (UUID u : players) {
-                if (manager.isLoadedAndOnline(u)) {
-                    return Bukkit.getPlayer(u);
-                }
+        for (UUID u : memberSnapshot) {
+            if (manager.isLoadedAndOnline(u)) {
+                return Bukkit.getPlayer(u);
             }
         }
         return null;

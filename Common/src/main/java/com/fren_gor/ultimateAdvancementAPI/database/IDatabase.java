@@ -28,6 +28,13 @@ import static com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.uuidFrom
  */
 public interface IDatabase {
 
+    /** Persists a consecutive batch. Implementations may override this to use a single transaction. */
+    default void updateAdvancements(List<AdvancementUpdate> updates) throws SQLException {
+        for (AdvancementUpdate update : updates) {
+            updateAdvancement(update.key(), update.teamId(), update.progression());
+        }
+    }
+
     /**
      * Sets up the database, like creating the tables.
      *

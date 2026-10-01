@@ -4,6 +4,8 @@ import com.fren_gor.eventManagerAPI.EventManager;
 import com.fren_gor.ultimateAdvancementAPI.AdvancementTab;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.database.DatabaseManager;
+import com.fren_gor.ultimateAdvancementAPI.database.ProgressionChange;
+import com.fren_gor.ultimateAdvancementAPI.util.SchedulerSupport;
 import com.fren_gor.ultimateAdvancementAPI.database.TeamProgression;
 import com.fren_gor.ultimateAdvancementAPI.events.advancement.AdvancementProgressionUpdateEvent;
 import com.fren_gor.ultimateAdvancementAPI.exceptions.DisposedException;
@@ -42,7 +44,6 @@ import java.util.function.Consumer;
 
 import static com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.progressionFromPlayer;
 import static com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.progressionFromUUID;
-import static com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.runSync;
 import static com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.uuidFromPlayer;
 import static com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.validateIncrement;
 import static com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.validateProgressionValueStrict;
@@ -54,6 +55,17 @@ import static com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.validate
  * <p>It is extended only by RootAdvancement and BaseAdvancement. It cannot be extended by any other class, which should extends
  */
 public abstract class Advancement {
+    private static final ClassValue<Boolean> CUSTOM_PROGRESSION_SETTER = new ClassValue<>() {
+        @Override protected Boolean computeValue(Class<?> type) {
+            for (Class<?> current = type; current != null; current = current.getSuperclass()) {
+                try {
+                    current.getDeclaredMethod("setProgression", TeamProgression.class, Player.class, int.class, boolean.class);
+                    return current != Advancement.class;
+                } catch (NoSuchMethodException ignored) { }
+            }
+            return false;
+        }
+    };
 
     /**
      * The namespaced key of the advancement, which identifies it univocally.
@@ -369,16 +381,24 @@ public abstract class Advancement {
         validateTeamProgression(pro);
         validateIncrement(increment);
 
-        int progression = getProgression(pro);
-        if (progression >= maxProgression) {
-            return progression;
+        // Preserve task advancement and consumer overrides while serializing their read-modify-write operation.
+        if (CUSTOM_PROGRESSION_SETTER.get(getClass())) {
+            synchronized (pro) {
+                int old = getProgression(pro);
+                if (old >= maxProgression) return old;
+                int next = (int) Math.min(maxProgression, (long) old + increment);
+                setProgression(pro, player, next, giveRewards);
+                return next;
+            }
         }
-        int newProgression = progression + increment;
-        if (newProgression > maxProgression) {
-            newProgression = maxProgression;
+
+        ProgressionChange change = advancementTab.getDatabaseManager().changeProgression(key, pro, previous -> (int) Math.min(maxProgression, (long) previous + increment));
+        if (change.current() != change.previous()) {
+            try { Bukkit.getPluginManager().callEvent(new AdvancementProgressionUpdateEvent(pro, change.previous(), change.current(), this)); }
+            catch (IllegalStateException error) { error.printStackTrace(); }
+            handlePlayer(pro, player, change.current(), change.previous(), giveRewards, AfterHandle.UPDATE_ADVANCEMENTS_TO_TEAM);
         }
-        setProgression(pro, player, newProgression, giveRewards);
-        return newProgression;
+        return change.current();
     }
 
     /**
@@ -473,12 +493,12 @@ public abstract class Advancement {
         validateTeamProgression(pro);
         if (newProgression >= this.maxProgression && oldProgression < this.maxProgression) {
             if (player != null) {
-                onGrant(player, giveRewards);
+                grantOnOwner(pro, player, giveRewards);
             } else {
                 DatabaseManager ds = advancementTab.getDatabaseManager();
                 player = pro.getAnOnlineMember(ds);
                 if (player != null) {
-                    onGrant(player, giveRewards);
+                    grantOnOwner(pro, player, giveRewards);
                 } else {
                     ds.setUnredeemed(key, giveRewards, pro);
                     return; // Skip advancement update, no player is online
@@ -487,6 +507,11 @@ public abstract class Advancement {
         }
         if (afterHandle != null)
             afterHandle.apply(pro, player, this);
+    }
+
+    private void grantOnOwner(TeamProgression team, Player player, boolean rewards) {
+        SchedulerSupport.player(advancementTab.getOwningPlugin(), player, 0, () -> onGrant(player, rewards),
+                () -> advancementTab.getDatabaseManager().setUnredeemed(key, rewards, team));
     }
 
     /**
@@ -561,6 +586,10 @@ public abstract class Advancement {
      */
     public void onGrant(@NotNull Player player, boolean giveRewards) {
         Preconditions.checkNotNull(player, "Player is null.");
+        if (!SchedulerSupport.owns(player)) {
+            SchedulerSupport.player(advancementTab.getOwningPlugin(), player, 0, () -> onGrant(player, giveRewards));
+            return;
+        }
 
         // Send complete messages
         Boolean gameRule = player.getWorld().getGameRuleValue(AdvancementUtils.SHOW_ADVANCEMENT_MESSAGES_GAMERULE);
@@ -568,14 +597,14 @@ public abstract class Advancement {
             BaseComponent[] msg = getAnnounceMessage(player);
             if (msg != null)
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    p.spigot().sendMessage(msg);
+                    SchedulerSupport.player(advancementTab.getOwningPlugin(), p, 0, () -> p.spigot().sendMessage(msg));
                 }
         }
 
         // Show Toast
         if (display.doesShowToast()) {
             // TODO Find a better solution
-            runSync(advancementTab.getOwningPlugin(), 2, () -> AdvancementUtils.displayToastDuringUpdate(player, this));
+            SchedulerSupport.player(advancementTab.getOwningPlugin(), player, 2, () -> AdvancementUtils.displayToastDuringUpdate(player, this));
         }
 
         if (giveRewards)

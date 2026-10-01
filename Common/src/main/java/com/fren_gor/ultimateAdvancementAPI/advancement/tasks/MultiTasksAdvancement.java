@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Range;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
@@ -54,9 +54,10 @@ public class MultiTasksAdvancement extends AbstractMultiTasksAdvancement {
     /**
      * The cache for the team's progressions (the key is the team unique id).
      */
-    protected final Map<Integer, Integer> progressionsCache = new HashMap<>();
+    protected final Map<Integer, Integer> progressionsCache = new ConcurrentHashMap<>();
 
-    private boolean initialised = false, doReloads = true;
+    private volatile boolean initialised = false;
+    private final ThreadLocal<Boolean> doReloads = ThreadLocal.withInitial(() -> true);
 
     /**
      * Creates a new {@code MultiTasksAdvancement}.
@@ -185,7 +186,7 @@ public class MultiTasksAdvancement extends AbstractMultiTasksAdvancement {
             return; // Unnecessary update
         }
 
-        doReloads = false;
+        doReloads.set(false);
         try {
             if (newProgression == maxProgression) {
                 for (TaskAdvancement t : tasks) {
@@ -224,7 +225,7 @@ public class MultiTasksAdvancement extends AbstractMultiTasksAdvancement {
                 throw new ArbitraryMultiTaskProgressionUpdateException();
             }
         } finally {
-            doReloads = true;
+            doReloads.remove();
         }
         updateProgressionCache(progression, newProgression);
 
@@ -239,7 +240,7 @@ public class MultiTasksAdvancement extends AbstractMultiTasksAdvancement {
     @Override
     protected void reloadTasks(@NotNull TeamProgression progression, @Nullable Player player, boolean giveRewards) {
         checkInitialisation();
-        if (doReloads) { // Skip reloads when update comes from ourselves
+        if (doReloads.get()) { // Skip reloads when update comes from ourselves
             validateTeamProgression(progression);
 
             int current = getProgression(progression);

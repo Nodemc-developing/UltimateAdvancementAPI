@@ -2,6 +2,7 @@ package com.fren_gor.ultimateAdvancementAPI.database.impl;
 
 import com.fren_gor.ultimateAdvancementAPI.AdvancementMain;
 import com.fren_gor.ultimateAdvancementAPI.database.IDatabase;
+import com.fren_gor.ultimateAdvancementAPI.database.AdvancementUpdate;
 import com.fren_gor.ultimateAdvancementAPI.database.TeamProgression;
 import com.fren_gor.ultimateAdvancementAPI.exceptions.IllegalKeyException;
 import com.fren_gor.ultimateAdvancementAPI.exceptions.UserNotRegisteredException;
@@ -104,7 +105,9 @@ public class SQLite implements IDatabase {
             statement.addBatch("CREATE TABLE IF NOT EXISTS `Players` (`UUID` TEXT NOT NULL PRIMARY KEY, `Name` TEXT NOT NULL, `TeamID` INTEGER NOT NULL, FOREIGN KEY(`TeamID`) REFERENCES `Teams`(`ID`) ON DELETE CASCADE ON UPDATE CASCADE);");
             statement.addBatch("CREATE TABLE IF NOT EXISTS `Advancements` (`Namespace` TEXT NOT NULL, `Key` TEXT NOT NULL, `TeamID` INTEGER NOT NULL, `Progression` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`Namespace`,`Key`,`TeamID`), FOREIGN KEY(`TeamID`) REFERENCES `Teams`(`ID`) ON DELETE CASCADE ON UPDATE CASCADE);");
             statement.addBatch("CREATE TABLE IF NOT EXISTS `Unredeemed` (`Namespace` TEXT NOT NULL, `Key` TEXT NOT NULL, `TeamID` INTEGER NOT NULL, `GiveRewards` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`Namespace`,`Key`,`TeamID`), FOREIGN KEY(`Namespace`, `Key`,`TeamID`) REFERENCES `Advancements`(`Namespace`, `Key`,`TeamID`) ON DELETE CASCADE ON UPDATE CASCADE);");
-            statement.addBatch("VACUUM;"); // Vacuum the db periodically at startup
+            statement.addBatch("CREATE INDEX IF NOT EXISTS `Players_TeamID` ON `Players` (`TeamID`);");
+            statement.addBatch("CREATE INDEX IF NOT EXISTS `Advancements_TeamID` ON `Advancements` (`TeamID`);");
+            statement.addBatch("CREATE INDEX IF NOT EXISTS `Unredeemed_TeamID` ON `Unredeemed` (`TeamID`);");
             statement.executeBatch();
         }
     }
@@ -267,13 +270,37 @@ public class SQLite implements IDatabase {
                 ps.execute();
             }
         } else {
-            try (PreparedStatement ps = openConnection().prepareStatement("INSERT OR REPLACE INTO `Advancements` (`Namespace`, `Key`, `TeamID`, `Progression`) VALUES (?, ?, ?, ?);")) {
+            try (PreparedStatement ps = openConnection().prepareStatement("INSERT INTO `Advancements` (`Namespace`, `Key`, `TeamID`, `Progression`) VALUES (?, ?, ?, ?) ON CONFLICT (`Namespace`, `Key`, `TeamID`) DO UPDATE SET `Progression`=excluded.`Progression`;")) {
                 ps.setString(1, key.getNamespace());
                 ps.setString(2, key.getKey());
                 ps.setInt(3, teamId);
                 ps.setInt(4, progression);
                 ps.execute();
             }
+        }
+    }
+
+    @Override
+    public void updateAdvancements(List<AdvancementUpdate> updates) throws SQLException {
+        Connection connection = openConnection();
+        boolean autoCommit = connection.getAutoCommit();
+        connection.setAutoCommit(false);
+        try (PreparedStatement upsert = connection.prepareStatement("INSERT INTO `Advancements` (`Namespace`, `Key`, `TeamID`, `Progression`) VALUES (?, ?, ?, ?) ON CONFLICT (`Namespace`, `Key`, `TeamID`) DO UPDATE SET `Progression`=excluded.`Progression`;");
+             PreparedStatement delete = connection.prepareStatement("DELETE FROM `Advancements` WHERE `Namespace`=? AND `Key`=? AND `TeamID`=?;")) {
+            for (AdvancementUpdate update : updates) {
+                PreparedStatement statement = update.progression() == 0 ? delete : upsert;
+                statement.setString(1, update.key().getNamespace());
+                statement.setString(2, update.key().getKey());
+                statement.setInt(3, update.teamId());
+                if (update.progression() != 0) statement.setInt(4, update.progression());
+                statement.executeUpdate();
+            }
+            connection.commit();
+        } catch (SQLException failure) {
+            connection.rollback();
+            throw failure;
+        } finally {
+            connection.setAutoCommit(autoCommit);
         }
     }
 

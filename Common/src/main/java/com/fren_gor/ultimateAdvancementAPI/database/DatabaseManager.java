@@ -23,6 +23,7 @@ import com.fren_gor.ultimateAdvancementAPI.exceptions.UserNotLoadedException;
 import com.fren_gor.ultimateAdvancementAPI.nms.util.ReflectionUtil;
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils;
+import com.fren_gor.ultimateAdvancementAPI.util.SchedulerSupport;
 import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -46,15 +47,19 @@ import java.sql.SQLException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.function.IntUnaryOperator;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import static com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils.runSync;
@@ -96,6 +101,9 @@ public final class DatabaseManager {
     private final Map<UUID, TempUserMetadata> tempLoaded = new HashMap<>();
     private final EventManager eventManager;
     private final IDatabase database;
+    private final OrderedDatabaseExecutor databaseExecutor;
+    private final Set<PendingReward> claimedRewards = ConcurrentHashMap.newKeySet();
+    private record PendingReward(int teamId, AdvancementKey key) {}
 
     private final Map<UUID, Consumer<Player>> waitingForJoinEvent = Collections.synchronizedMap(new HashMap<>());
     private static final Consumer<Player> LOGIN_SENTINEL = p -> {
@@ -120,11 +128,8 @@ public final class DatabaseManager {
             // PlayerJoinEvent has already been fired, remove the uuid and schedule the action
             // (here run == JOIN_SENTINEL)
         }
-        runSync(main, LOAD_EVENTS_DELAY, () -> {
-            Player p = Bukkit.getPlayer(uuid);
-            Preconditions.checkNotNull(p, "Player is null");
-            action.accept(p);
-        });
+        Player player = Bukkit.getPlayer(uuid);
+        if (player != null) SchedulerSupport.player(main.getOwningPlugin(), player, LOAD_EVENTS_DELAY, () -> action.accept(player));
     }
 
     // Must be called async
@@ -137,7 +142,6 @@ public final class DatabaseManager {
             return;
         }
 
-        waitingForJoinEvent.put(uuid, LOGIN_SENTINEL);
         try {
             loadPlayerMainFunction(uuid, name);
         } catch (Exception ex) {
@@ -160,7 +164,7 @@ public final class DatabaseManager {
                 if (t != null && t.noMemberMatch(progressionCache::containsKey)) {
                     t.inCache.set(false); // Invalidate TeamProgression
                     callEventCatchingExceptions(new AsyncTeamUnloadEvent(t));
-                    if (Bukkit.isPrimaryThread()) {
+                    if (SchedulerSupport.isTickThread()) {
                         callEventCatchingExceptions(new TeamUnloadEvent(t));
                     } else {
                         runSync(main.getOwningPlugin(), () -> callEventCatchingExceptions(new TeamUnloadEvent(t)));
@@ -229,13 +233,20 @@ public final class DatabaseManager {
         this.main = main;
         this.eventManager = main.getEventManager();
         this.database = database;
+        database.setUp();
+        this.databaseExecutor = new OrderedDatabaseExecutor(database, main.getLogger(), "UltimateAdvancementAPI");
         commonSetUp();
     }
 
-    private void commonSetUp() throws SQLException {
-        // Run it sync to avoid using uninitialized database
-        database.setUp();
+    private CompletableFuture<Void> runDatabaseTask(Runnable operation) {
+        return CompletableFuture.runAsync(operation, databaseExecutor);
+    }
 
+    private <T> CompletableFuture<T> submitDatabaseTask(Supplier<T> operation) {
+        return CompletableFuture.supplyAsync(operation, databaseExecutor);
+    }
+
+    private void commonSetUp() throws SQLException {
         // Don't use PlayerLoginEvent on Paper 1.21.7+
         if (IS_PAPER && (ReflectionUtil.MAJOR_VERSION >= 26 || (ReflectionUtil.MAJOR_VERSION == 1 && (ReflectionUtil.VERSION > 21 || (ReflectionUtil.VERSION == 21 && ReflectionUtil.MINOR_VERSION >= 7))))) {
             // Must use reflections since we're compiling using the Spigot artifact
@@ -266,7 +277,8 @@ public final class DatabaseManager {
                     Object profile = getProfile.invoke(connection);
                     UUID uuid = (UUID) getId.invoke(profile);
                     String name = (String) getName.invoke(profile);
-                    CompletableFuture.runAsync(() -> {
+                    waitingForJoinEvent.put(uuid, LOGIN_SENTINEL);
+                    runDatabaseTask(() -> {
                         loadPlayerOnConnect(uuid, name);
                     });
                 } catch (ReflectiveOperationException ex) {
@@ -285,7 +297,8 @@ public final class DatabaseManager {
             eventManager.register(this, PlayerLoginEvent.class, EventPriority.LOWEST, e -> {
                 UUID uuid = e.getPlayer().getUniqueId();
                 String name = e.getPlayer().getName();
-                CompletableFuture.runAsync(() -> {
+                waitingForJoinEvent.put(uuid, LOGIN_SENTINEL);
+                runDatabaseTask(() -> {
                     loadPlayerOnConnect(uuid, name);
                 });
             });
@@ -304,9 +317,7 @@ public final class DatabaseManager {
                     return;
                 }
             }
-            runSync(main, LOAD_EVENTS_DELAY, () -> {
-                action.accept(e.getPlayer());
-            });
+            SchedulerSupport.player(main.getOwningPlugin(), e.getPlayer(), LOAD_EVENTS_DELAY, () -> action.accept(e.getPlayer()));
         });
         eventManager.register(this, PlayerQuitEvent.class, EventPriority.MONITOR, e -> {
             unloadPlayerOnQuit(e.getPlayer().getUniqueId());
@@ -326,7 +337,7 @@ public final class DatabaseManager {
                 }
             }
         });
-        CompletableFuture.runAsync(() -> {
+        runDatabaseTask(() -> {
             try {
                 database.clearUpTeams();
             } catch (SQLException e) {
@@ -343,10 +354,8 @@ public final class DatabaseManager {
     public void unregister() {
         if (eventManager.isEnabled())
             eventManager.unregister(this);
-        try {
-            database.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (!databaseExecutor.shutdown(5, TimeUnit.SECONDS)) {
+            main.getLogger().warning("Database shutdown is still draining accepted operations; the connection will close after completion.");
         }
         synchronized (this) {
             tempLoaded.clear();
@@ -366,6 +375,7 @@ public final class DatabaseManager {
     private void loadPlayerMainFunction(final @NotNull UUID uuid, final @NotNull String name) throws SQLException {
         Entry<TeamProgression, Boolean> entry = loadOrRegisterPlayer(uuid, name);
         final TeamProgression pro = entry.getKey();
+        if (!waitingForJoinEvent.containsKey(uuid)) { unloadPlayerOnQuit(uuid); return; }
         registerForJoinEvent(uuid, player -> {
             callEventCatchingExceptions(new PlayerLoadingCompletedEvent(player, pro));
             if (entry.getValue()) {
@@ -373,7 +383,7 @@ public final class DatabaseManager {
                 callEventCatchingExceptions(new TeamUpdateEvent(pro, uuid, TeamUpdateEvent.Action.JOIN));
             }
             main.updatePlayer(player);
-            CompletableFuture.runAsync(() -> processUnredeemed(player, pro));
+            runDatabaseTask(() -> processUnredeemed(player, pro));
         });
     }
 
@@ -388,28 +398,35 @@ public final class DatabaseManager {
      * @throws SQLException If anything goes wrong.
      */
     @NotNull
-    private synchronized Entry<TeamProgression, Boolean> loadOrRegisterPlayer(final @NotNull UUID uuid, final @NotNull String name) throws SQLException {
-        TeamProgression pro = progressionCache.get(uuid);
-        if (pro != null) {
-            // Don't let player to be unloaded from cache
-            TempUserMetadata meta = tempLoaded.get(uuid);
-            if (meta != null) {
-                meta.isOnline = true;
+    private Entry<TeamProgression, Boolean> loadOrRegisterPlayer(final @NotNull UUID uuid, final @NotNull String name) throws SQLException {
+        TeamProgression shared;
+        synchronized (this) {
+            TeamProgression pro = progressionCache.get(uuid);
+            if (pro != null) {
+                TempUserMetadata meta = tempLoaded.get(uuid);
+                if (meta != null) {
+                    meta.isOnline = true;
+                }
+                return new SimpleEntry<>(pro, false);
             }
-            return new SimpleEntry<>(pro, false);
+            shared = searchTeamProgressionDeeply(uuid);
+            if (shared != null) progressionCache.put(uuid, shared);
         }
-
-        pro = searchTeamProgressionDeeply(uuid);
-        if (pro != null) {
-            progressionCache.put(uuid, pro); // Direct caching
+        if (shared != null) {
             updatePlayerName(uuid, name);
-            return new SimpleEntry<>(pro, false);
+            return new SimpleEntry<>(shared, false);
         }
-
         Entry<TeamProgression, Boolean> e = database.loadOrRegisterPlayer(uuid, name);
         updatePlayerName(uuid, name);
-        e.getKey().inCache.set(true); // Set TeamProgression valid
-        progressionCache.put(uuid, e.getKey());
+        synchronized (this) {
+            TeamProgression existing = searchTeamProgressionDeeply(uuid);
+            if (existing != null) {
+                progressionCache.put(uuid, existing);
+                return new SimpleEntry<>(existing, e.getValue());
+            }
+            e.getKey().inCache.set(true);
+            progressionCache.put(uuid, e.getKey());
+        }
         callEventCatchingExceptions(new AsyncTeamLoadEvent(e.getKey()));
         runSync(main, () -> callEventCatchingExceptions(new TeamLoadEvent(e.getKey())));
         return e;
@@ -439,46 +456,35 @@ public final class DatabaseManager {
      * @param player The player.
      * @param pro The player's team.
      */
-    private void processUnredeemed(final @NotNull Player player, final @NotNull TeamProgression pro) {
-        final List<Entry<AdvancementKey, Boolean>> list;
+    private void processUnredeemed(final Player player, final TeamProgression team) {
         try {
-            list = database.getUnredeemed(pro.getTeamId());
-        } catch (SQLException e) {
-            System.err.println("Cannot fetch unredeemed advancements:");
-            e.printStackTrace();
-            return;
-        }
-
-        if (list.size() != 0)
-            runSync(main, () -> {
-                Iterator<Entry<AdvancementKey, Boolean>> it = list.iterator();
-                final List<Entry<Advancement, Boolean>> advs = new LinkedList<>();
-                while (it.hasNext()) {
-                    Entry<AdvancementKey, Boolean> k = it.next();
-                    Advancement a = main.getAdvancement(k.getKey());
-                    if (a == null || !a.getAdvancementTab().isShownTo(player)) {
-                        it.remove();
-                    } else {
-                        advs.add(new SimpleEntry<>(a, k.getValue()));
+            List<Entry<AdvancementKey, Boolean>> pending = database.getUnredeemed(team.getTeamId());
+            pending.removeIf(entry -> !claimedRewards.add(new PendingReward(team.getTeamId(), entry.getKey())));
+            if (pending.isEmpty()) return;
+            SchedulerSupport.player(main.getOwningPlugin(), player, 1, () -> {
+                for (Entry<AdvancementKey, Boolean> entry : pending) {
+                    Advancement advancement = main.getAdvancement(entry.getKey());
+                    PendingReward claim = new PendingReward(team.getTeamId(), entry.getKey());
+                    if (advancement == null || !advancement.getAdvancementTab().isShownTo(player)) {
+                        claimedRewards.remove(claim);
+                        continue;
+                    }
+                    // Acknowledge only after delivery on the owning region; retiring players keep pending rewards.
+                    try {
+                        advancement.onGrant(player, entry.getValue());
+                        unsetUnredeemed(entry.getKey(), team).whenComplete((result, error) -> claimedRewards.remove(claim));
+                    } catch (Throwable error) {
+                        claimedRewards.remove(claim);
+                        main.getLogger().log(Level.SEVERE, "Cannot deliver advancement reward " + entry.getKey(), error);
                     }
                 }
-                if (advs.size() != 0)
-                    CompletableFuture.runAsync(() -> {
-                        try {
-                            database.unsetUnredeemed(list, pro.getTeamId());
-                        } catch (SQLException e) {
-                            System.err.println("Cannot unset unredeemed advancements:");
-                            e.printStackTrace();
-                            return;
-                        }
-                        runSync(main, () -> {
-                            for (Entry<Advancement, Boolean> e : advs) {
-                                e.getKey().onGrant(player, e.getValue());
-                            }
-                        });
-                    });
-            });
+            }, () -> pending.forEach(entry -> claimedRewards.remove(new PendingReward(team.getTeamId(), entry.getKey()))));
+        } catch (SQLException error) {
+            main.getLogger().log(Level.SEVERE, "Cannot fetch pending advancement rewards", error);
+        }
     }
+
+    public Plugin getOwningPlugin() { return main.getOwningPlugin(); }
 
     /**
      * Updates the name of the specified player in the database.
@@ -497,7 +503,7 @@ public final class DatabaseManager {
     private CompletableFuture<Result> updatePlayerName(@NotNull UUID uuid, @NotNull String name) {
         Preconditions.checkNotNull(uuid, "UUID is null.");
         Preconditions.checkNotNull(name, "Name is null.");
-        return CompletableFuture.supplyAsync(() -> {
+        return submitDatabaseTask(() -> {
             try {
                 database.updatePlayerName(uuid, name);
             } catch (SQLException e) {
@@ -568,7 +574,7 @@ public final class DatabaseManager {
             return CompletableFuture.completedFuture(Result.SUCCESSFUL);
         }
 
-        return CompletableFuture.supplyAsync(() -> {
+        return submitDatabaseTask(() -> {
             try {
                 database.movePlayer(playerToMove, otherTeamProgression.getTeamId());
             } catch (SQLException e) {
@@ -652,7 +658,7 @@ public final class DatabaseManager {
             }
         }
 
-        return CompletableFuture.supplyAsync(() -> {
+        return submitDatabaseTask(() -> {
             final TeamProgression newPro;
             try {
                 newPro = database.movePlayerInNewTeam(uuid);
@@ -732,7 +738,7 @@ public final class DatabaseManager {
                 throw new IllegalStateException("Player is temporary loaded.");
         }
 
-        return CompletableFuture.supplyAsync(() -> {
+        return submitDatabaseTask(() -> {
             try {
                 database.unregisterPlayer(uuid);
             } catch (SQLException e) {
@@ -829,25 +835,19 @@ public final class DatabaseManager {
         Preconditions.checkArgument(progression.getSize() > 0, "TeamProgression doesn't contain any player.");
         AdvancementUtils.checkSync();
 
-        int old = progression.updateProgression(key, newProgression);
+        ProgressionChange change = changeProgression(key, progression, ignored -> newProgression);
+        return new SimpleEntry<>(change.previous(), change.persisted());
+    }
 
-        if (old != newProgression) { // Don't update if the progression isn't being changed
-            callEventCatchingExceptions(new ProgressionUpdateEvent(progression, old, newProgression, key));
-
-            return new SimpleEntry<>(old, CompletableFuture.supplyAsync(() -> {
-                try {
-                    database.updateAdvancement(key, progression.getTeamId(), newProgression);
-                } catch (SQLException e) {
-                    System.err.println("Cannot update advancement " + key + " to team " + progression.getTeamId() + ':');
-                    e.printStackTrace();
-                    return new Result(e);
-                } catch (Exception e) {
-                    return new Result(e);
-                }
-                return Result.SUCCESSFUL;
-            }));
+    public ProgressionChange changeProgression(@NotNull AdvancementKey key, @NotNull TeamProgression progression, IntUnaryOperator operation) {
+        Preconditions.checkNotNull(key, "Key is null.");
+        validateTeamProgression(progression);
+        AdvancementUtils.checkSync();
+        ProgressionChange change = databaseExecutor.change(key, progression, operation);
+        if (change.previous() != change.current()) {
+            callEventCatchingExceptions(new ProgressionUpdateEvent(progression, change.previous(), change.current(), key));
         }
-        return new SimpleEntry<>(old, CompletableFuture.completedFuture(Result.SUCCESSFUL));
+        return change;
     }
 
     /**
@@ -998,7 +998,7 @@ public final class DatabaseManager {
     public CompletableFuture<ObjectResult<@NotNull Boolean>> isUnredeemed(@NotNull AdvancementKey key, @NotNull TeamProgression pro) {
         Preconditions.checkNotNull(key, "AdvancementKey is null.");
         validateTeamProgression(pro);
-        return CompletableFuture.supplyAsync(() -> {
+        return submitDatabaseTask(() -> {
             try {
                 return new ObjectResult<>(database.isUnredeemed(key, pro.getTeamId()));
             } catch (SQLException e) {
@@ -1039,7 +1039,7 @@ public final class DatabaseManager {
     public CompletableFuture<Result> setUnredeemed(@NotNull AdvancementKey key, boolean giveRewards, @NotNull TeamProgression pro) {
         Preconditions.checkNotNull(key, "AdvancementKey is null.");
         validateTeamProgression(pro);
-        return CompletableFuture.supplyAsync(() -> {
+        return submitDatabaseTask(() -> {
             try {
                 database.setUnredeemed(key, giveRewards, pro.getTeamId());
             } catch (SQLException e) {
@@ -1078,7 +1078,7 @@ public final class DatabaseManager {
     public CompletableFuture<Result> unsetUnredeemed(@NotNull AdvancementKey key, @NotNull TeamProgression pro) {
         Preconditions.checkNotNull(key, "AdvancementKey is null.");
         validateTeamProgression(pro);
-        return CompletableFuture.supplyAsync(() -> {
+        return submitDatabaseTask(() -> {
             try {
                 database.unsetUnredeemed(key, pro.getTeamId());
             } catch (SQLException e) {
@@ -1102,7 +1102,7 @@ public final class DatabaseManager {
     @NotNull
     public CompletableFuture<ObjectResult<@NotNull String>> getStoredPlayerName(@NotNull UUID uuid) {
         Preconditions.checkNotNull(uuid, "UUID is null.");
-        return CompletableFuture.supplyAsync(() -> {
+        return submitDatabaseTask(() -> {
             try {
                 return new ObjectResult<>(database.getPlayerName(uuid));
             } catch (SQLException e) {
@@ -1143,7 +1143,7 @@ public final class DatabaseManager {
             handleCacheFreeingOption(uuid, pro, option); // Direct caching and handle requests
             return CompletableFuture.completedFuture(new ObjectResult<>(pro));
         }
-        return CompletableFuture.supplyAsync(() -> {
+        return submitDatabaseTask(() -> {
             TeamProgression t;
             try {
                 t = database.loadUUID(uuid);
@@ -1233,7 +1233,7 @@ public final class DatabaseManager {
                     if (t != null && t.noMemberMatch(progressionCache::containsKey)) {
                         t.inCache.set(false); // Invalidate TeamProgression
                         callEventCatchingExceptions(new AsyncTeamUnloadEvent(t));
-                        if (Bukkit.isPrimaryThread()) {
+                        if (SchedulerSupport.isTickThread()) {
                             callEventCatchingExceptions(new TeamUnloadEvent(t));
                         } else {
                             runSync(main, () -> callEventCatchingExceptions(new TeamUnloadEvent(t)));
