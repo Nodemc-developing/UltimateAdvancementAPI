@@ -32,6 +32,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import com.fren_gor.ultimateAdvancementAPI.util.SchedulerSupport;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -66,7 +67,8 @@ public final class AdvancementTab {
     private final String namespace;
     private final DatabaseManager databaseManager;
     private final Map<AdvancementKey, Advancement> advancements = new ConcurrentHashMap<>();
-    private final Map<Player, Set<MinecraftKeyWrapper>> players = new ConcurrentHashMap<>();
+    private final Map<Player, ClientState> players = new ConcurrentHashMap<>();
+    private final AtomicLong clientGeneration = new AtomicLong();
     private final AdvsUpdateRunnable updateManager;
 
     private RootAdvancement rootAdvancement;
@@ -83,7 +85,7 @@ public final class AdvancementTab {
         this.eventManager = new EventManager(owningPlugin);
         this.databaseManager = Objects.requireNonNull(databaseManager);
         this.updateManager = new AdvsUpdateRunnable();
-        eventManager.register(this, PlayerQuitEvent.class, e -> { players.remove(e.getPlayer()); updateManager.snapshots.remove(e.getPlayer()); updateManager.pendingPlayers.remove(e.getPlayer()); updateManager.previousKeys.remove(e.getPlayer().getUniqueId()); });
+        eventManager.register(this, PlayerQuitEvent.class, e -> { players.remove(e.getPlayer()); updateManager.pendingPlayers.remove(e.getPlayer()); updateManager.previousKeys.remove(e.getPlayer().getUniqueId()); });
     }
 
     /**
@@ -382,6 +384,15 @@ public final class AdvancementTab {
      * @throws DisposedException If the tab is disposed.
      */
     public void registerAdvancements(@NotNull RootAdvancement rootAdvancement, @NotNull Set<BaseAdvancement> advancements) {
+        registerAdvancements(rootAdvancement, advancements, false);
+    }
+
+    /** Applies automatic layout before registration when requested. */
+    public void registerAdvancements(RootAdvancement root, boolean automaticLayout, BaseAdvancement... advancements) {
+        registerAdvancements(root, Sets.newHashSet(advancements), automaticLayout);
+    }
+
+    public void registerAdvancements(RootAdvancement rootAdvancement, Set<BaseAdvancement> advancements, boolean automaticLayout) {
         if (disposed) {
             throw new DisposedException("AdvancementTab is disposed.");
         }
@@ -398,6 +409,8 @@ public final class AdvancementTab {
                 throw new IllegalArgumentException("Advancement " + a.getKey().toString() + " is not owned by this tab.");
             }
         }
+
+        if (automaticLayout) com.fren_gor.ultimateAdvancementAPI.util.AdvancementLayout.applyVanilla(rootAdvancement, advancements);
 
         // Just to be sure
         this.advancements.clear();
@@ -439,11 +452,6 @@ public final class AdvancementTab {
         for (Advancement adv : this.advancements.values()) {
             callValidation(adv);
         }
-    }
-
-    public void registerAdvancements(RootAdvancement root, Set<BaseAdvancement> advancements, boolean automaticLayout) {
-        if (automaticLayout) com.fren_gor.ultimateAdvancementAPI.util.AdvancementLayout.applyVanilla(root, advancements);
-        registerAdvancements(root, advancements);
     }
 
     private void callOnRegister(Advancement adv) {
@@ -505,8 +513,10 @@ public final class AdvancementTab {
         checkInitialisation();
         Preconditions.checkNotNull(player, "Player is null.");
         if (!players.containsKey(player)) {
-            players.put(player, Collections.emptySet());
-            updateAdvancementsToTeam(player);
+            TeamProgression team = databaseManager.getTeamProgression(AdvancementUtils.uuidFromPlayer(player));
+            if (players.putIfAbsent(player, ClientState.empty(clientGeneration.get())) == null) {
+                updateAdvancementsToTeam(team);
+            }
         }
     }
 
@@ -542,11 +552,12 @@ public final class AdvancementTab {
         checkInitialisation();
         Preconditions.checkNotNull(player, "Player is null.");
 
-        updateManager.snapshots.remove(player);
-        Set<MinecraftKeyWrapper> keys = new HashSet<>(updateManager.previousKeys.getOrDefault(player.getUniqueId(), Collections.emptySet()));
-        updateManager.previousKeys.remove(player.getUniqueId());
-        Set<MinecraftKeyWrapper> sent = players.remove(player);
-        if (sent != null) keys.addAll(sent);
+        long generation = clientGeneration.get();
+        ClientKeys restored = updateManager.previousKeys.remove(player.getUniqueId());
+        Set<MinecraftKeyWrapper> keys = new HashSet<>();
+        if (restored != null && restored.generation == generation) keys.addAll(restored.keys);
+        ClientState sent = players.remove(player);
+        if (sent != null && sent.generation == generation) keys.addAll(sent.keys);
         removePlayer(player, keys);
     }
 
@@ -566,12 +577,30 @@ public final class AdvancementTab {
     }
 
     Map<UUID, Set<MinecraftKeyWrapper>> snapshotClientKeys() {
-        Map<UUID, Set<MinecraftKeyWrapper>> keys = new ConcurrentHashMap<>(updateManager.previousKeys);
-        players.forEach((player, sent) -> { if (!sent.isEmpty()) keys.put(player.getUniqueId(), sent); });
+        long generation = clientGeneration.get();
+        Map<UUID, Set<MinecraftKeyWrapper>> keys = new HashMap<>();
+        updateManager.previousKeys.forEach((uuid, restored) -> { if (restored.generation == generation) keys.put(uuid, restored.keys); });
+        players.forEach((player, sent) -> { if (sent.generation == generation && !sent.keys.isEmpty()) keys.put(player.getUniqueId(), sent.keys); });
         return keys;
     }
 
-    void restoreClientKeys(Map<UUID, Set<MinecraftKeyWrapper>> keys) { updateManager.previousKeys.putAll(keys); }
+    void restoreClientKeys(Map<UUID, Set<MinecraftKeyWrapper>> keys) {
+        long generation = clientGeneration.get();
+        keys.forEach((uuid, sent) -> updateManager.previousKeys.put(uuid, new ClientKeys(generation, sent)));
+    }
+
+    /** Invalidates definitions and removal history without hiding the tab. */
+    void resetClientAdvancements() {
+        clientGeneration.incrementAndGet();
+        updateManager.previousKeys.clear();
+        for (Player player : players.keySet()) {
+            try {
+                updateAdvancementsToTeam(player.getUniqueId());
+            } catch (UserNotLoadedException ignored) {
+                // A later update retries while the client generation remains invalidated.
+            }
+        }
+    }
 
     void dispose(boolean removeClient) {
         checkInitialisation();
@@ -843,8 +872,8 @@ public final class AdvancementTab {
         SchedulerSupport.player(owningPlugin, player, 0, () -> {
             if (disposed) return;
             TeamProgression team = databaseManager.getTeamProgression(player);
-            updateManager.snapshots.remove(player);
-            players.putIfAbsent(player, Collections.emptySet());
+            players.compute(player, (ignored, previous) -> previous == null ? ClientState.empty(clientGeneration.get())
+                    : new ClientState(previous.generation, Collections.emptyMap(), previous.keys));
             updateManager.schedule(team);
         });
     }
@@ -853,8 +882,7 @@ public final class AdvancementTab {
 
         private final Set<TeamProgression> advsToUpdate = ConcurrentHashMap.newKeySet();
         private final Set<Player> pendingPlayers = ConcurrentHashMap.newKeySet();
-        private final Map<Player, Map<AdvancementWrapper, Integer>> snapshots = new ConcurrentHashMap<>();
-        private final Map<UUID, Set<MinecraftKeyWrapper>> previousKeys = new ConcurrentHashMap<>();
+        private final Map<UUID, ClientKeys> previousKeys = new ConcurrentHashMap<>();
         private SchedulerSupport.Task task;
         private boolean scheduled;
 
@@ -871,7 +899,6 @@ public final class AdvancementTab {
             if (task != null) task.cancel();
             advsToUpdate.clear();
             pendingPlayers.clear();
-            snapshots.clear();
             previousKeys.clear();
             scheduled = false;
         }
@@ -888,7 +915,7 @@ public final class AdvancementTab {
                     SchedulerSupport.player(owningPlugin, player, 1, () -> {
                         pendingPlayers.remove(player);
                         if (!disposed && databaseManager.isLoaded(player.getUniqueId())) updatePlayer(player, databaseManager.getTeamProgression(player));
-                    }, () -> { pendingPlayers.remove(player); snapshots.remove(player); players.remove(player); });
+                    }, () -> { pendingPlayers.remove(player); players.remove(player); previousKeys.remove(uuid); });
                 });
             }
             synchronized (this) {
@@ -902,23 +929,48 @@ public final class AdvancementTab {
         }
 
         private void updatePlayer(Player player, TeamProgression team) {
-            if (!players.containsKey(player)) return;
+            ClientState state = players.get(player);
+            if (state == null) return;
+            long generation = clientGeneration.get();
             Map<AdvancementWrapper, Integer> current = new HashMap<>(advancements.size() + 16);
             for (Advancement advancement : advancements.values()) advancement.onUpdate(team, current);
-            Map<AdvancementWrapper, Integer> previous = snapshots.getOrDefault(player, Collections.emptyMap());
+            Map<AdvancementWrapper, Integer> previous = state.generation == generation ? state.progress : Collections.emptyMap();
             var delta = com.fren_gor.ultimateAdvancementAPI.util.ClientStateDelta.between(previous, current);
-            Set<MinecraftKeyWrapper> removed = new HashSet<>(previousKeys.getOrDefault(player.getUniqueId(), Collections.emptySet()));
-            current.keySet().forEach(wrapper -> removed.remove(wrapper.getKey()));
+            Set<MinecraftKeyWrapper> removed = new HashSet<>();
             delta.removed().forEach(wrapper -> removed.add(wrapper.getKey()));
+            ClientKeys restored = previousKeys.get(player.getUniqueId());
+            Set<MinecraftKeyWrapper> keys = null;
+            if ((restored != null && restored.generation == generation)
+                    || (previous.isEmpty() && state.generation == generation && !state.keys.isEmpty())) {
+                keys = new HashSet<>();
+                for (AdvancementWrapper wrapper : current.keySet()) keys.add(wrapper.getKey());
+                if (restored != null && restored.generation == generation) removed.addAll(restored.keys);
+                if (state.generation == generation) removed.addAll(state.keys);
+                removed.removeAll(keys);
+            }
+            if (generation != clientGeneration.get()) { schedule(team); return; }
+            if (delta.isEmpty() && removed.isEmpty() && state.generation == generation) return;
             if (!delta.isEmpty() || !removed.isEmpty()) {
                 try { PacketPlayOutAdvancementsWrapper.craftUpdatePacket(delta.added(), removed, delta.progress()).sendTo(player); }
                 catch (ReflectiveOperationException error) { error.printStackTrace(); return; }
             }
-            snapshots.put(player, Map.copyOf(current));
-            previousKeys.remove(player.getUniqueId());
-            Set<MinecraftKeyWrapper> keys = new HashSet<>();
-            current.keySet().forEach(wrapper -> keys.add(wrapper.getKey()));
-            players.put(player, Set.copyOf(keys));
+            if (keys == null && delta.added().isEmpty() && delta.removed().isEmpty() && state.generation == generation) {
+                keys = state.keys;
+            } else if (keys == null) {
+                keys = new HashSet<>();
+                for (AdvancementWrapper wrapper : current.keySet()) keys.add(wrapper.getKey());
+                keys = Set.copyOf(keys);
+            } else keys = Set.copyOf(keys);
+            players.replace(player, state, new ClientState(generation, Map.copyOf(current), keys));
+            if (restored != null) previousKeys.remove(player.getUniqueId(), restored);
+            if (generation != clientGeneration.get()) schedule(team);
+        }
+    }
+
+    private record ClientKeys(long generation, Set<MinecraftKeyWrapper> keys) {}
+    private record ClientState(long generation, Map<AdvancementWrapper, Integer> progress, Set<MinecraftKeyWrapper> keys) {
+        private static ClientState empty(long generation) {
+            return new ClientState(generation, Collections.emptyMap(), Collections.emptySet());
         }
     }
 }

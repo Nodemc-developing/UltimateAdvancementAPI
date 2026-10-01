@@ -25,7 +25,7 @@ public final class SchedulerSupport {
 
     public static boolean owns(Player player) {
         if (!FOLIA) return Bukkit.isPrimaryThread();
-        try { return (boolean) Bukkit.class.getMethod("isOwnedByCurrentRegion", Entity.class).invoke(null, player); }
+        try { return (boolean) FoliaMethods.OWNS.invoke(null, player); }
         catch (ReflectiveOperationException error) { throw new IllegalStateException("Cannot identify player owner", error); }
     }
 
@@ -35,12 +35,10 @@ public final class SchedulerSupport {
             return task::cancel;
         }
         try {
-            Object scheduler = Bukkit.class.getMethod("getGlobalRegionScheduler").invoke(null);
-            Class<?> type = Class.forName("io.papermc.paper.threadedregions.scheduler.GlobalRegionScheduler");
-            Object task = type.getMethod("runDelayed", Plugin.class, Consumer.class, long.class)
-                    .invoke(scheduler, plugin, (Consumer<Object>) ignored -> operation.run(), Math.max(1, delay));
-            Method cancel = Class.forName("io.papermc.paper.threadedregions.scheduler.ScheduledTask").getMethod("cancel");
-            return () -> { try { cancel.invoke(task); } catch (ReflectiveOperationException error) { throw new IllegalStateException(error); } };
+            Object scheduler = FoliaMethods.GLOBAL.invoke(null);
+            Object task = FoliaMethods.GLOBAL_DELAYED.invoke(scheduler, plugin,
+                    (Consumer<Object>) ignored -> operation.run(), Math.max(1, delay));
+            return () -> { try { FoliaMethods.CANCEL.invoke(task); } catch (ReflectiveOperationException error) { throw new IllegalStateException(error); } };
         } catch (ReflectiveOperationException error) { throw new IllegalStateException("Cannot schedule global task", error); }
     }
 
@@ -49,21 +47,20 @@ public final class SchedulerSupport {
     }
 
     public static void player(Plugin plugin, Player player, long delay, Runnable operation, Runnable retired) {
+        if (!plugin.isEnabled()) { retired.run(); return; }
         if (delay == 0 && owns(player)) {
             if (player.isOnline()) operation.run(); else retired.run();
             return;
         }
         Runnable checked = () -> { if (player.isOnline()) operation.run(); else retired.run(); };
-        if (!plugin.isEnabled()) { retired.run(); return; }
         if (!FOLIA) {
             global(plugin, delay, checked);
             return;
         }
         try {
-            Object scheduler = Entity.class.getMethod("getScheduler").invoke(player);
-            Class<?> type = Class.forName("io.papermc.paper.threadedregions.scheduler.EntityScheduler");
-            Object task = type.getMethod("runDelayed", Plugin.class, Consumer.class, Runnable.class, long.class)
-                    .invoke(scheduler, plugin, (Consumer<Object>) ignored -> checked.run(), retired, Math.max(1, delay));
+            Object scheduler = FoliaMethods.ENTITY.invoke(player);
+            Object task = FoliaMethods.ENTITY_DELAYED.invoke(scheduler, plugin,
+                    (Consumer<Object>) ignored -> checked.run(), retired, Math.max(1, delay));
             if (task == null) retired.run();
         } catch (ReflectiveOperationException error) { throw new IllegalStateException("Cannot schedule player task", error); }
     }
@@ -71,9 +68,8 @@ public final class SchedulerSupport {
     public static void async(Plugin plugin, Runnable operation) {
         if (!FOLIA) { Bukkit.getScheduler().runTaskAsynchronously(plugin, operation); return; }
         try {
-            Object scheduler = Bukkit.class.getMethod("getAsyncScheduler").invoke(null);
-            Class.forName("io.papermc.paper.threadedregions.scheduler.AsyncScheduler")
-                    .getMethod("runNow", Plugin.class, Consumer.class).invoke(scheduler, plugin, (Consumer<Object>) ignored -> operation.run());
+            Object scheduler = FoliaMethods.ASYNC.invoke(null);
+            FoliaMethods.ASYNC_NOW.invoke(scheduler, plugin, (Consumer<Object>) ignored -> operation.run());
         } catch (ReflectiveOperationException error) { throw new IllegalStateException("Cannot schedule async task", error); }
     }
 
@@ -86,5 +82,27 @@ public final class SchedulerSupport {
     }
     private static boolean exists(String name) {
         try { Class.forName(name); return true; } catch (ClassNotFoundException ignored) { return false; }
+    }
+
+    /** Loaded once on Folia; Spigot does not resolve Paper-only method signatures. */
+    private static final class FoliaMethods {
+        private static final Method OWNS, GLOBAL, GLOBAL_DELAYED, ENTITY, ENTITY_DELAYED, ASYNC, ASYNC_NOW, CANCEL;
+        static {
+            try {
+                String scheduler = "io.papermc.paper.threadedregions.scheduler.";
+                OWNS = Bukkit.class.getMethod("isOwnedByCurrentRegion", Entity.class);
+                GLOBAL = Bukkit.class.getMethod("getGlobalRegionScheduler");
+                GLOBAL_DELAYED = Class.forName(scheduler + "GlobalRegionScheduler")
+                        .getMethod("runDelayed", Plugin.class, Consumer.class, long.class);
+                ENTITY = Entity.class.getMethod("getScheduler");
+                ENTITY_DELAYED = Class.forName(scheduler + "EntityScheduler")
+                        .getMethod("runDelayed", Plugin.class, Consumer.class, Runnable.class, long.class);
+                ASYNC = Bukkit.class.getMethod("getAsyncScheduler");
+                ASYNC_NOW = Class.forName(scheduler + "AsyncScheduler").getMethod("runNow", Plugin.class, Consumer.class);
+                CANCEL = Class.forName(scheduler + "ScheduledTask").getMethod("cancel");
+            } catch (ReflectiveOperationException error) {
+                throw new ExceptionInInitializerError(error);
+            }
+        }
     }
 }

@@ -17,11 +17,13 @@ import com.google.common.base.Preconditions;
 import net.byteflux.libby.BukkitLibraryManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.ServerCommandEvent;
+import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus.Obsolete;
 import org.jetbrains.annotations.Contract;
@@ -67,6 +69,7 @@ public final class AdvancementMain {
     private BukkitLibraryManager libbyManager;
     private final String libFolder;
     private final Map<String, AdvancementTab> tabs = new ConcurrentHashMap<>();
+    private final AtomicBoolean clientResyncScheduled = new AtomicBoolean();
     private final Map<Plugin, List<AdvancementTab>> pluginMap = new ConcurrentHashMap<>();
     private final Map<String, Map<UUID, Set<MinecraftKeyWrapper>>> preservedClientKeys = new ConcurrentHashMap<>();
 
@@ -234,17 +237,41 @@ public final class AdvancementMain {
         eventManager.register(this, PluginDisableEvent.class, EventPriority.HIGHEST, e -> unregisterAdvancementTabs(e.getPlugin()));
         eventManager.register(this, PlayerQuitEvent.class, e -> preservedClientKeys.values().forEach(keys -> keys.remove(e.getPlayer().getUniqueId())));
 
-        // Resend advancements if /minecraft:reload is called
-        eventManager.register(this, ServerCommandEvent.class, e -> {
-            if (isMcReload(e.getCommand()))
-                runSync(this, 20, () -> Bukkit.getOnlinePlayers().forEach(this::updatePlayer));
+        eventManager.register(this, ServerLoadEvent.class, e -> {
+            if (e.getType() == ServerLoadEvent.LoadType.RELOAD) scheduleClientResync(1);
         });
-        eventManager.register(this, PlayerCommandPreprocessEvent.class, e -> {
-            if (isMcReload(e.getMessage()))
-                runSync(this, 20, () -> Bukkit.getOnlinePlayers().forEach(this::updatePlayer));
-        });
+        try {
+            Class<? extends Event> resourcesReloaded = Class.forName("io.papermc.paper.event.server.ServerResourcesReloadedEvent")
+                    .asSubclass(Event.class);
+            eventManager.register(this, resourcesReloaded, e -> scheduleClientResync(1));
+        } catch (ClassNotFoundException ignored) {
+            // Spigot has no resource-reload completion event; retain its command fallback.
+            eventManager.register(this, ServerCommandEvent.class, EventPriority.MONITOR, e -> {
+                if (!e.isCancelled() && isMcReload(e.getCommand())) scheduleClientResync(20);
+            });
+            eventManager.register(this, PlayerCommandPreprocessEvent.class, EventPriority.MONITOR, e -> {
+                if (!e.isCancelled() && isMcReload(e.getMessage())) scheduleClientResync(20);
+            });
+        }
 
         UltimateAdvancementAPI.main = this;
+    }
+
+    private void scheduleClientResync(long delay) {
+        if (!ENABLED.get() || !clientResyncScheduled.compareAndSet(false, true)) return;
+        try {
+            runSync(this, delay, () -> {
+                clientResyncScheduled.set(false);
+                if (!ENABLED.get()) return;
+                preservedClientKeys.clear();
+                for (AdvancementTab tab : tabs.values()) {
+                    if (tab.isActive()) tab.resetClientAdvancements();
+                }
+            });
+        } catch (RuntimeException error) {
+            clientResyncScheduled.set(false);
+            throw error;
+        }
     }
 
     @Contract("_ -> fail")

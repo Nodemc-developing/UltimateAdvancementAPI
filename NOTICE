@@ -1,5 +1,11 @@
 Copyright (C) 2021 fren_gor, EscanorTargaryen.
 
+The tidy-tree layout and native command fallback incorporate changes from
+IOVEYOUMC0/UltimateAdvancementAPI, revision 14b88955db9e27b2ff7aa829fe4f0763a393212a:
+https://github.com/IOVEYOUMC0/UltimateAdvancementAPI
+These changes were adapted for iterative traversal, client-state synchronization
+and player-owned command scheduling. Original license notices are retained.
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation, either version 3 of the License, or

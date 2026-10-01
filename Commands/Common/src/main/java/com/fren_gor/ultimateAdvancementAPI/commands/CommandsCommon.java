@@ -3,6 +3,7 @@ package com.fren_gor.ultimateAdvancementAPI.commands;
 import com.fren_gor.ultimateAdvancementAPI.AdvancementMain;
 import com.fren_gor.ultimateAdvancementAPI.AdvancementTab;
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
+import com.fren_gor.ultimateAdvancementAPI.util.SchedulerSupport;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -37,6 +39,8 @@ public final class CommandsCommon<Error extends Exception> {
 
     public void grantAll(CommandSender sender, Collection<Player> players, boolean giveRewards) throws Error {
         validatePlayerArgument(players);
+        players = ownedPlayers(sender, players, p -> grantAll(sender, List.of(p), giveRewards));
+        if (players.isEmpty()) return;
         boolean failed = false;
         for (AdvancementTab m : main.getTabs()) {
             if (m.isActive()) {
@@ -49,9 +53,9 @@ public final class CommandsCommon<Error extends Exception> {
         }
         for (Player p : players) {
             if (failed) {
-                sender.sendMessage(ChatColor.RED + "Could not grant every advancement to " + p.getName());
+                reply(sender, ChatColor.RED + "Could not grant every advancement to " + p.getName());
             } else {
-                sender.sendMessage(ChatColor.GREEN + "All advancements have been granted to " + ChatColor.YELLOW + p.getName());
+                reply(sender, ChatColor.GREEN + "All advancements have been granted to " + ChatColor.YELLOW + p.getName());
             }
         }
     }
@@ -65,6 +69,8 @@ public final class CommandsCommon<Error extends Exception> {
         if (!tab.isActive()) {
             throw commandAPI.failWithString("Advancement tab is not active.");
         }
+        players = ownedPlayers(sender, players, p -> grantTab(sender, tab, List.of(p), giveRewards));
+        if (players.isEmpty()) return;
         boolean failed = false;
         for (Advancement a : tab.getAdvancements()) {
             for (Player p : players) {
@@ -73,9 +79,9 @@ public final class CommandsCommon<Error extends Exception> {
         }
         for (Player p : players) {
             if (failed) {
-                sender.sendMessage(ChatColor.RED + "Could not grant every advancement of tab " + tab + " to " + p.getName());
+                reply(sender, ChatColor.RED + "Could not grant every advancement of tab " + tab + " to " + p.getName());
             } else {
-                sender.sendMessage(ChatColor.GREEN + "All advancements of tab " + ChatColor.YELLOW + tab + ChatColor.GREEN + " have been granted to " + ChatColor.YELLOW + p.getName());
+                reply(sender, ChatColor.GREEN + "All advancements of tab " + ChatColor.YELLOW + tab + ChatColor.GREEN + " have been granted to " + ChatColor.YELLOW + p.getName());
             }
         }
     }
@@ -86,13 +92,15 @@ public final class CommandsCommon<Error extends Exception> {
 
     public void grantOne(CommandSender sender, Advancement advancement, Collection<Player> players, boolean giveRewards) throws Error {
         validatePlayerArgument(players);
+        players = ownedPlayers(sender, players, p -> grantOne(sender, advancement, List.of(p), giveRewards));
+        if (players.isEmpty()) return;
         for (Player p : players) {
             boolean failed = runSafely(sender, () -> {
                 advancement.getAdvancementTab().showTab(p);
                 advancement.grant(p, giveRewards);
             }, () -> "Could not grant advancement " + advancement + " to " + p.getName());
             if (!failed) {
-                sender.sendMessage(ChatColor.GREEN + "Advancement " + ChatColor.YELLOW + advancement.getKey() + ChatColor.GREEN + " has been granted to " + ChatColor.YELLOW + p.getName());
+                reply(sender, ChatColor.GREEN + "Advancement " + ChatColor.YELLOW + advancement.getKey() + ChatColor.GREEN + " has been granted to " + ChatColor.YELLOW + p.getName());
             }
         }
     }
@@ -103,6 +111,8 @@ public final class CommandsCommon<Error extends Exception> {
 
     public void revokeAll(CommandSender sender, Collection<Player> players, boolean hideTabs) throws Error {
         validatePlayerArgument(players);
+        players = ownedPlayers(sender, players, p -> revokeAll(sender, List.of(p), hideTabs));
+        if (players.isEmpty()) return;
         boolean failed = false;
         for (AdvancementTab m : main.getTabs()) {
             var advancements = m.getAdvancements();
@@ -117,9 +127,9 @@ public final class CommandsCommon<Error extends Exception> {
         }
         for (Player p : players) {
             if (failed) {
-                sender.sendMessage(ChatColor.RED + "Could not revoke every advancement to " + p.getName());
+                reply(sender, ChatColor.RED + "Could not revoke every advancement to " + p.getName());
             } else {
-                sender.sendMessage(ChatColor.GREEN + "All advancements have been revoked to " + ChatColor.YELLOW + p.getName());
+                reply(sender, ChatColor.GREEN + "All advancements have been revoked to " + ChatColor.YELLOW + p.getName());
             }
         }
     }
@@ -133,6 +143,8 @@ public final class CommandsCommon<Error extends Exception> {
         if (!tab.isActive()) {
             throw commandAPI.failWithString("Advancement tab is not active.");
         }
+        players = ownedPlayers(sender, players, p -> revokeTab(sender, tab, List.of(p), hideTab));
+        if (players.isEmpty()) return;
         var advancements = tab.getAdvancements();
         for (Player p : players) {
             boolean failed = false;
@@ -143,9 +155,9 @@ public final class CommandsCommon<Error extends Exception> {
                 runSafely(sender, () -> tab.hideTab(p), () -> "Could not hide advancement tab " + tab + " to " + p.getName());
             }
             if (failed) {
-                sender.sendMessage(ChatColor.RED + "Could not revoke every advancement of tab " + tab + " to " + p.getName());
+                reply(sender, ChatColor.RED + "Could not revoke every advancement of tab " + tab + " to " + p.getName());
             } else {
-                sender.sendMessage(ChatColor.GREEN + "All advancements of tab " + ChatColor.YELLOW + tab + ChatColor.GREEN + " have been revoked to " + ChatColor.YELLOW + p.getName());
+                reply(sender, ChatColor.GREEN + "All advancements of tab " + ChatColor.YELLOW + tab + ChatColor.GREEN + " have been revoked to " + ChatColor.YELLOW + p.getName());
             }
         }
     }
@@ -156,12 +168,14 @@ public final class CommandsCommon<Error extends Exception> {
 
     public void revokeOne(CommandSender sender, Advancement advancement, Collection<Player> players) throws Error {
         validatePlayerArgument(players);
+        players = ownedPlayers(sender, players, p -> revokeOne(sender, advancement, List.of(p)));
+        if (players.isEmpty()) return;
         for (Player p : players) {
             boolean failed = runSafely(sender, () -> {
                 advancement.revoke(p);
             }, () -> "Could not revoke advancement " + advancement + " to " + p.getName());
             if (!failed) {
-                sender.sendMessage(ChatColor.GREEN + "Advancement " + ChatColor.YELLOW + advancement + ChatColor.GREEN + " has been revoked to " + ChatColor.YELLOW + p.getName());
+                reply(sender, ChatColor.GREEN + "Advancement " + ChatColor.YELLOW + advancement + ChatColor.GREEN + " has been revoked to " + ChatColor.YELLOW + p.getName());
             }
         }
     }
@@ -180,7 +194,7 @@ public final class CommandsCommon<Error extends Exception> {
                 return "Could not get " + p.getName() + "'s progression of advancement " + advancement;
             });
             if (!failed) {
-                sender.sendMessage(ChatColor.YELLOW + p.getName() + ChatColor.GREEN + " progression is " + ChatColor.YELLOW + progression[0] + '/' + advancement.getMaxProgression());
+                reply(sender, ChatColor.YELLOW + p.getName() + ChatColor.GREEN + " progression is " + ChatColor.YELLOW + progression[0] + '/' + advancement.getMaxProgression());
             }
         }
         return progression[0];
@@ -192,6 +206,8 @@ public final class CommandsCommon<Error extends Exception> {
 
     public void setProgression(CommandSender sender, Advancement advancement, int progression, Collection<Player> players, boolean giveRewards) throws Error {
         validatePlayerArgument(players);
+        players = ownedPlayers(sender, players, p -> setProgression(sender, advancement, progression, List.of(p), giveRewards));
+        if (players.isEmpty()) return;
         final int progr = Math.min(advancement.getMaxProgression(), progression);
         for (Player p : players) {
             boolean failed = runSafely(sender, () -> {
@@ -200,7 +216,7 @@ public final class CommandsCommon<Error extends Exception> {
                 return "Could not set " + p.getName() + "'s progression of advancement " + advancement + " to " + progr + '/' + advancement.getMaxProgression();
             });
             if (!failed) {
-                sender.sendMessage(ChatColor.GREEN + "Progression of " + ChatColor.YELLOW + p.getName() + ChatColor.GREEN + " has been set to " + ChatColor.YELLOW + progr + '/' + advancement.getMaxProgression());
+                reply(sender, ChatColor.GREEN + "Progression of " + ChatColor.YELLOW + p.getName() + ChatColor.GREEN + " has been set to " + ChatColor.YELLOW + progr + '/' + advancement.getMaxProgression());
             }
         }
     }
@@ -212,7 +228,7 @@ public final class CommandsCommon<Error extends Exception> {
         } catch (Exception e) {
             String error = errorGenerator.get();
             main.getLogger().log(Level.SEVERE, error, e);
-            sender.sendMessage(ChatColor.RED + error);
+            reply(sender, ChatColor.RED + error);
             return true;
         }
         return false;
@@ -223,6 +239,30 @@ public final class CommandsCommon<Error extends Exception> {
             throw commandAPI.failWithString("No player has been provided.");
         }
     }
+
+    private Collection<Player> ownedPlayers(CommandSender sender, Collection<Player> players, PlayerAction action) {
+        List<Player> owned = new ArrayList<>(players.size());
+        for (Player player : players) {
+            if (SchedulerSupport.owns(player)) owned.add(player);
+            else SchedulerSupport.player(main.getOwningPlugin(), player, 0, () -> {
+                try { action.run(player); }
+                catch (Exception error) {
+                    main.getLogger().log(Level.WARNING, "Advancement command failed for " + player.getName(), error);
+                    reply(sender, ChatColor.RED + error.getMessage());
+                }
+            });
+        }
+        return owned;
+    }
+
+    private void reply(CommandSender sender, String message) {
+        if (sender instanceof Player player) {
+            SchedulerSupport.player(main.getOwningPlugin(), player, 0, () -> player.sendMessage(message));
+        } else sender.sendMessage(message);
+    }
+
+    @FunctionalInterface
+    private interface PlayerAction { void run(Player player) throws Exception; }
 
     /**
      * @hidden

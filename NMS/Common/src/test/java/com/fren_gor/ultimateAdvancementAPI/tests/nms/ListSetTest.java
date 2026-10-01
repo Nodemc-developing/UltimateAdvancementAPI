@@ -69,4 +69,18 @@ public class ListSetTest {
         }
         assertEquals(original.size(), counter);
     }
+
+    @Test public void exhaustedIteratorsAndParallelTraversalRespectTheCollectionContract() {
+        Set<Integer> source = new HashSet<>(Set.of(1, 2, 3));
+        source.add(null);
+        ListSet<Integer> set = new ListSet<>(source);
+        var iterator = set.iterator();
+        while (iterator.hasNext()) iterator.next();
+        assertThrows(java.util.NoSuchElementException.class, iterator::next);
+        assertThrows(java.util.NoSuchElementException.class, new ListSet<>(Set.of()).iterator()::next);
+        assertEquals(6, set.parallelStream().mapToInt(Integer::intValue).sum());
+        Set<Integer> visited = new HashSet<>();
+        set.forEach(visited::add);
+        assertEquals(Set.of(1, 2, 3), visited);
+    }
 }

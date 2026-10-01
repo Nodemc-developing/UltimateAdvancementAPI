@@ -28,12 +28,16 @@ val generateTestProperties = tasks.register("generateTestProperties") {
     }
 }
 sourceSets.test { java.srcDir(layout.buildDirectory.dir("generated/test-sources")) }
-tasks.compileTestJava { dependsOn(generateTestProperties) }
+tasks.compileTestJava {
+    dependsOn(generateTestProperties)
+    source(file("../Commands/Common/src/main/java/com/fren_gor/ultimateAdvancementAPI/commands/CommandsCommon.java"))
+}
 tasks.test {
     useJUnitPlatform()
     javaLauncher.set(javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(21)) })
 }
 tasks.processResources {
+    inputs.property("pluginVersion", project.version)
     from("src/main/template-resources") { filter { it.replace("\${project.version}", project.version.toString()) } }
     from("src/licenses") { into("META-INF/.libs") }
 }

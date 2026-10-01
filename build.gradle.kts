@@ -5,7 +5,7 @@ plugins {
 }
 allprojects {
     group = "com.frengor"
-    version = "2.8.1-pro.1"
+    version = "2.8.1-pro.2"
     repositories {
         mavenLocal()
         mavenCentral()
@@ -31,6 +31,7 @@ sourceSets.main {
     resources.setSrcDirs(listOf("Plugin/src/main/resources"))
 }
 tasks.processResources {
+    inputs.property("pluginVersion", project.version)
     filesMatching("plugin.yml") { filter { it.replace("\${project.version}", project.version.toString()).replace("\${project.description}", "Custom advancements with ordered persistence and Folia scheduling").replace("\${project.url}", "https://github.com/Nodemc-developing/UltimateAdvancementAPI") } }
     from("LICENSE", "LGPL", "NOTICE", "build-support/uaa-modern-distribution")
 }

@@ -1,6 +1,7 @@
 package com.fren_gor.ultimateAdvancementAPI;
 
 import com.fren_gor.ultimateAdvancementAPI.commands.CommandAPIManager;
+import com.fren_gor.ultimateAdvancementAPI.commands.BukkitAdvancementCommand;
 import com.fren_gor.ultimateAdvancementAPI.commands.CommandAPIManager.ILoadable;
 import com.fren_gor.ultimateAdvancementAPI.exceptions.InvalidVersionException;
 import com.fren_gor.ultimateAdvancementAPI.metrics.BStats;
@@ -99,6 +100,8 @@ public class AdvancementPlugin extends JavaPlugin {
             }
         }
 
+        if (!commandsEnabled) BukkitAdvancementCommand.register(main);
+
         if (configManager.getDisableVanillaAdvancements() || configManager.getDisableVanillaRecipeAdvancements()) {
             SchedulerSupport.global(this, 20, () -> {
                     try {
@@ -127,6 +130,7 @@ public class AdvancementPlugin extends JavaPlugin {
                 t.printStackTrace();
             }
         }
+        BukkitAdvancementCommand.unregister();
         main.disable();
         main = null;
     }

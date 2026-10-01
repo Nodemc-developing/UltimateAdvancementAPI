@@ -9,7 +9,11 @@ import org.jetbrains.annotations.Range;
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.function.Consumer;
 
 /**
  * Immutable copy of the non-null elements of a {@link Set}.
@@ -82,18 +86,17 @@ public final class ListSet<E> extends AbstractSet<E> implements Set<E> {
     @NotNull
     public Iterator<E> iterator() {
         return new Iterator<>() {
-            private final AtomicInteger current = new AtomicInteger(0);
+            private int current;
 
             @Override
             public boolean hasNext() {
-                return current.get() < size;
+                return current < size;
             }
 
             @Override
             public E next() {
-                // It is thread-safe to not synchronize accesses to elements array
-                // since it cannot be modified after being populated by the constructor
-                return elements[current.getAndIncrement()];
+                if (!hasNext()) throw new NoSuchElementException();
+                return elements[current++];
             }
         };
     }
@@ -104,5 +107,16 @@ public final class ListSet<E> extends AbstractSet<E> implements Set<E> {
     @Override
     public int size() {
         return size;
+    }
+
+    @Override
+    public void forEach(Consumer<? super E> action) {
+        Objects.requireNonNull(action);
+        for (int i = 0; i < size; i++) action.accept(elements[i]);
+    }
+
+    @Override
+    public Spliterator<E> spliterator() {
+        return Spliterators.spliterator(elements, 0, size, Spliterator.DISTINCT | Spliterator.NONNULL | Spliterator.IMMUTABLE);
     }
 }
