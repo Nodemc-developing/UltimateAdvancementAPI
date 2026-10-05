@@ -19,7 +19,8 @@ public class Versions {
     private static final String API_VERSION = Optional.ofNullable(Versions.class.getPackage().getImplementationVersion()).orElse("2.8.1");
 
     private static final List<String> SUPPORTED_NMS_VERSIONS = Versions.class.getResource("/uaa-modern-distribution") != null
-        ? List.of("v26_2_R1", "v26_3_R1") : List.of(
+        ? List.of("v1_21_R1", "v1_21_R2", "v1_21_R3", "v1_21_R4", "v1_21_R5",
+                  "v1_21_R6", "v1_21_R7", "v26_1_R2", "v26_2_R1", "v26_3_R1") : List.of(
         "v1_15_R1",
         "v1_16_R1",
         "v1_16_R2",

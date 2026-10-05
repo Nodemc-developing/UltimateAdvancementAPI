@@ -142,11 +142,14 @@ public class VanillaAdvancementDisablerWrapper_v1_21_R4 extends VanillaAdvanceme
 
         // Remove advancements from players
         for (Player player : Bukkit.getOnlinePlayers()) {
-            var mcPlayer = ((CraftPlayer) player).getHandle();
-            var advs = mcPlayer.getAdvancements();
-            advs.reload(serverAdvancements);
-            firstPacket.setBoolean(advs, false); // Don't clear every client advancement
-            mcPlayer.connection.send(removePacket);
+            runForPlayer(player, () -> {
+                var mcPlayer = ((CraftPlayer) player).getHandle();
+                var advs = mcPlayer.getAdvancements();
+                advs.reload(serverAdvancements);
+                try { firstPacket.setBoolean(advs, false); }
+                catch (IllegalAccessException error) { throw new IllegalStateException(error); } // Don't clear every client advancement
+                mcPlayer.connection.send(removePacket);
+            });
         }
     }
 

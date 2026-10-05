@@ -1,0 +1,7 @@
+name: UaaCrossVersionVerification
+version: 1.0
+main: UaaCrossVersionVerification
+api-version: '1.21'
+folia-supported: true
+depend: [UltimateAdvancementAPI]
+description: Independent native advancement compatibility verification

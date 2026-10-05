@@ -1,0 +1,4156 @@
+{
+  "schemaVersion": 1,
+  "version": "2.8.1-pro.3",
+  "verifiedAt": "2026-10-04T12:07:22.934712+00:00",
+  "artifact": {
+    "name": "UltimateAdvancementAPI-Plugin-2.8.1-pro.3.jar",
+    "sha256": "23c42974685fbdbed4b6be6e29903df4be11bed89b1e46cb0136603bdec8a589",
+    "bytes": 609416
+  },
+  "build": {
+    "jdk": "25.0.3",
+    "gradle": "9.8.0",
+    "result": "PASS"
+  },
+  "unitTests": [
+    {
+      "module": "plugin-commands",
+      "suites": 3,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "Common",
+      "suites": 11,
+      "tests": 48,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "distributionChecks": [
+    {
+      "id": "zip_integrity",
+      "status": "PASS"
+    },
+    {
+      "id": "unique_entries",
+      "status": "PASS"
+    },
+    {
+      "id": "class_headers",
+      "status": "PASS"
+    },
+    {
+      "id": "no_preview_bytecode",
+      "status": "PASS"
+    },
+    {
+      "id": "java21_shared_boundary",
+      "status": "PASS"
+    },
+    {
+      "id": "java16_common_boundary",
+      "status": "PASS"
+    },
+    {
+      "id": "native_bytecode_boundaries",
+      "status": "PASS"
+    },
+    {
+      "id": "ten_native_adapters",
+      "status": "PASS"
+    },
+    {
+      "id": "no_bundled_server_classes",
+      "status": "PASS"
+    },
+    {
+      "id": "unversioned_craftbukkit",
+      "status": "PASS"
+    },
+    {
+      "id": "plugin_metadata",
+      "status": "PASS"
+    },
+    {
+      "id": "mojang_manifest",
+      "status": "PASS"
+    },
+    {
+      "id": "distribution_marker",
+      "status": "PASS"
+    },
+    {
+      "id": "licenses_and_notice",
+      "status": "PASS"
+    },
+    {
+      "id": "retained_apache_license",
+      "status": "PASS"
+    }
+  ],
+  "scope": "Native initialization, automatic layout, components, six packet codec round trips and actual global scheduling. No real-player, region-owner, client-rendering or performance verification.",
+  "serverRuns": [
+    {
+      "family": "folia",
+      "minecraft": "1.21.4",
+      "build": 6,
+      "java": "21.0.6",
+      "adapter": "v1_21_R3",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "dcf2333211c1468c8eddc482bc8549600818cc661a709124a79c752f8fa2ac3a",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:06:44.732713700Z",
+        "server": "1.21.4-6-b785bcc (MC: 1.21.4)",
+        "minecraft": "1.21.4",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "required": true,
+            "id": "global_scheduler",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "adapter_loading",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "advancement_initialization",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "automatic_layout",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "localized_native_display",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_icon_copy",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "localized_toasts_and_announcements",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_full",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_delta",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_mixed",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_overlap",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_remove",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_reset",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "probe_cleanup",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": false,
+            "id": "entity_scheduler_ownership",
+            "status": "SKIP",
+            "detail": "No real player task was scheduled; verify separately with a real player"
+          },
+          {
+            "required": false,
+            "id": "folia_region_ownership",
+            "status": "SKIP",
+            "detail": "No world or region tasks were scheduled; verify separately on Folia"
+          },
+          {
+            "required": false,
+            "id": "client_rendering_and_delivery",
+            "status": "SKIP",
+            "detail": "No player network connection or client was used"
+          }
+        ],
+        "packets": {
+          "full": {
+            "removed": 0,
+            "added": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 5,
+            "encodedBytes": 1304
+          },
+          "delta": {
+            "removed": 0,
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 62
+          },
+          "mixed": {
+            "removed": 1,
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 2,
+            "encodedBytes": 345
+          },
+          "overlap": {
+            "removed": 0,
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 279
+          },
+          "remove": {
+            "removed": 1,
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 36
+          },
+          "reset": {
+            "removed": 0,
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 4
+          }
+        },
+        "coverage": {
+          "entityOwnership": "NOT_RUN",
+          "regionOwnership": "NOT_RUN",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix",
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "clientRendering": "NOT_RUN"
+        },
+        "folia": true,
+        "adapter": "v1_21_R3",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:06:47.346345300Z"
+      }
+    },
+    {
+      "family": "folia",
+      "minecraft": "1.21.5",
+      "build": 12,
+      "java": "21.0.6",
+      "adapter": "v1_21_R4",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "ebeb8f2f9e97fd972c89ebc276bc547c6194c6542d3a1884e3cfef7228f69cdb",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:06:46.517607100Z",
+        "server": "1.21.5-12-dfa3ca4 (MC: 1.21.5)",
+        "minecraft": "1.21.5",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "id": "global_scheduler",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "adapter_loading",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "advancement_initialization",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "automatic_layout",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "localized_native_display",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_icon_copy",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "localized_toasts_and_announcements",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_full",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_delta",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_mixed",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_overlap",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_remove",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_reset",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "probe_cleanup",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "entity_scheduler_ownership",
+            "status": "SKIP",
+            "detail": "No real player task was scheduled; verify separately with a real player",
+            "required": false
+          },
+          {
+            "id": "folia_region_ownership",
+            "status": "SKIP",
+            "detail": "No world or region tasks were scheduled; verify separately on Folia",
+            "required": false
+          },
+          {
+            "id": "client_rendering_and_delivery",
+            "status": "SKIP",
+            "detail": "No player network connection or client was used",
+            "required": false
+          }
+        ],
+        "packets": {
+          "full": {
+            "progress": 5,
+            "encodedBytes": 1292,
+            "removed": 0,
+            "added": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "delta": {
+            "progress": 1,
+            "encodedBytes": 63,
+            "removed": 0,
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "mixed": {
+            "progress": 2,
+            "encodedBytes": 346,
+            "removed": 1,
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "overlap": {
+            "progress": 1,
+            "encodedBytes": 280,
+            "removed": 0,
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "remove": {
+            "progress": 0,
+            "encodedBytes": 37,
+            "removed": 1,
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "reset": {
+            "progress": 0,
+            "encodedBytes": 5,
+            "removed": 0,
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          }
+        },
+        "coverage": {
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "clientRendering": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "regionOwnership": "NOT_RUN",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix"
+        },
+        "folia": true,
+        "adapter": "v1_21_R4",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:06:49.055687300Z"
+      }
+    },
+    {
+      "family": "folia",
+      "minecraft": "1.21.6",
+      "build": 6,
+      "java": "21.0.6",
+      "adapter": "v1_21_R5",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "917a8abaa542c1d0ef0e969693e227a7bfe1c42e671aaa806309e00a64efc234",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:06:48.393855500Z",
+        "server": "1.21.6-6-e4b0ae9 (MC: 1.21.6)",
+        "minecraft": "1.21.6",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "id": "global_scheduler",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "adapter_loading",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "advancement_initialization",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "automatic_layout",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "localized_native_display",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_icon_copy",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "localized_toasts_and_announcements",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_full",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_delta",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_mixed",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_overlap",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_remove",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_reset",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "probe_cleanup",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "entity_scheduler_ownership",
+            "status": "SKIP",
+            "detail": "No real player task was scheduled; verify separately with a real player",
+            "required": false
+          },
+          {
+            "id": "folia_region_ownership",
+            "status": "SKIP",
+            "detail": "No world or region tasks were scheduled; verify separately on Folia",
+            "required": false
+          },
+          {
+            "id": "client_rendering_and_delivery",
+            "status": "SKIP",
+            "detail": "No player network connection or client was used",
+            "required": false
+          }
+        ],
+        "packets": {
+          "full": {
+            "progress": 5,
+            "encodedBytes": 1292,
+            "removed": 0,
+            "added": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "delta": {
+            "progress": 1,
+            "encodedBytes": 63,
+            "removed": 0,
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "mixed": {
+            "progress": 2,
+            "encodedBytes": 346,
+            "removed": 1,
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "overlap": {
+            "progress": 1,
+            "encodedBytes": 280,
+            "removed": 0,
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "remove": {
+            "progress": 0,
+            "encodedBytes": 37,
+            "removed": 1,
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "reset": {
+            "progress": 0,
+            "encodedBytes": 5,
+            "removed": 0,
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          }
+        },
+        "coverage": {
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "clientRendering": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "regionOwnership": "NOT_RUN",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix"
+        },
+        "folia": true,
+        "adapter": "v1_21_R5",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:06:50.959149800Z"
+      }
+    },
+    {
+      "family": "folia",
+      "minecraft": "1.21.8",
+      "build": 6,
+      "java": "21.0.6",
+      "adapter": "v1_21_R5",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "233843cfd5001b6f658fcab549178d694cc37f0277d004ea295de0a94c57278f",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:07:04.358345400Z",
+        "server": "1.21.8-6-612d9bd (MC: 1.21.8)",
+        "minecraft": "1.21.8",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "global_scheduler"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "adapter_loading"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "advancement_initialization"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "automatic_layout"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "localized_native_display"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_icon_copy"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "localized_toasts_and_announcements"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_full"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_delta"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_mixed"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_overlap"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_remove"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_reset"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "probe_cleanup"
+          },
+          {
+            "required": false,
+            "detail": "No real player task was scheduled; verify separately with a real player",
+            "status": "SKIP",
+            "id": "entity_scheduler_ownership"
+          },
+          {
+            "required": false,
+            "detail": "No world or region tasks were scheduled; verify separately on Folia",
+            "status": "SKIP",
+            "id": "folia_region_ownership"
+          },
+          {
+            "required": false,
+            "detail": "No player network connection or client was used",
+            "status": "SKIP",
+            "id": "client_rendering_and_delivery"
+          }
+        ],
+        "packets": {
+          "full": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 5,
+            "removed": 0,
+            "encodedBytes": 1292,
+            "progress": 5
+          },
+          "delta": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0,
+            "removed": 0,
+            "encodedBytes": 63,
+            "progress": 1
+          },
+          "mixed": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 1,
+            "removed": 1,
+            "encodedBytes": 346,
+            "progress": 2
+          },
+          "overlap": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 1,
+            "removed": 0,
+            "encodedBytes": 280,
+            "progress": 1
+          },
+          "remove": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0,
+            "removed": 1,
+            "encodedBytes": 37,
+            "progress": 0
+          },
+          "reset": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0,
+            "removed": 0,
+            "encodedBytes": 5,
+            "progress": 0
+          }
+        },
+        "coverage": {
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix",
+          "regionOwnership": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "clientRendering": "NOT_RUN",
+          "nativePackets": "Construction and native codec round trip; no packets sent to players"
+        },
+        "folia": true,
+        "adapter": "v1_21_R5",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:07:07.062658600Z"
+      }
+    },
+    {
+      "family": "folia",
+      "minecraft": "1.21.11",
+      "build": 14,
+      "java": "21.0.6",
+      "adapter": "v1_21_R7",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "f52c408490a0225611e67907a3ca19f7e6da2c6bc899e715d5f46844e7103c39",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:07:07.652859400Z",
+        "server": "1.21.11-14-529aabc (MC: 1.21.11)",
+        "minecraft": "1.21.11",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "global_scheduler"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "adapter_loading"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "advancement_initialization"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "automatic_layout"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "localized_native_display"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_icon_copy"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "localized_toasts_and_announcements"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_full"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_delta"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_mixed"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_overlap"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_remove"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_reset"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "probe_cleanup"
+          },
+          {
+            "required": false,
+            "detail": "No real player task was scheduled; verify separately with a real player",
+            "status": "SKIP",
+            "id": "entity_scheduler_ownership"
+          },
+          {
+            "required": false,
+            "detail": "No world or region tasks were scheduled; verify separately on Folia",
+            "status": "SKIP",
+            "id": "folia_region_ownership"
+          },
+          {
+            "required": false,
+            "detail": "No player network connection or client was used",
+            "status": "SKIP",
+            "id": "client_rendering_and_delivery"
+          }
+        ],
+        "packets": {
+          "full": {
+            "added": 5,
+            "removed": 0,
+            "encodedBytes": 1292,
+            "progress": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "delta": {
+            "added": 0,
+            "removed": 0,
+            "encodedBytes": 63,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "mixed": {
+            "added": 1,
+            "removed": 1,
+            "encodedBytes": 346,
+            "progress": 2,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "overlap": {
+            "added": 1,
+            "removed": 0,
+            "encodedBytes": 280,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "remove": {
+            "added": 0,
+            "removed": 1,
+            "encodedBytes": 37,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "reset": {
+            "added": 0,
+            "removed": 0,
+            "encodedBytes": 5,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          }
+        },
+        "coverage": {
+          "regionOwnership": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "clientRendering": "NOT_RUN",
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix"
+        },
+        "folia": true,
+        "adapter": "v1_21_R7",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:07:09.771622900Z"
+      }
+    },
+    {
+      "family": "folia",
+      "minecraft": "26.2",
+      "build": 7,
+      "java": "25.0.3",
+      "adapter": "v26_2_R1",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "128a634192261cd38bb4a5dc54075018a0f896fd6c6f529e37dca6e99e32b3b3",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:07:20.015173Z",
+        "server": "26.2-7-14b7fee (MC: 26.2)",
+        "minecraft": "26.2",
+        "java": "25.0.3",
+        "checks": [
+          {
+            "required": true,
+            "id": "global_scheduler",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "adapter_loading",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "advancement_initialization",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "automatic_layout",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "localized_native_display",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_icon_copy",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "localized_toasts_and_announcements",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_full",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_delta",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_mixed",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_overlap",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_remove",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_reset",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "probe_cleanup",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": false,
+            "id": "entity_scheduler_ownership",
+            "status": "SKIP",
+            "detail": "No real player task was scheduled; verify separately with a real player"
+          },
+          {
+            "required": false,
+            "id": "folia_region_ownership",
+            "status": "SKIP",
+            "detail": "No world or region tasks were scheduled; verify separately on Folia"
+          },
+          {
+            "required": false,
+            "id": "client_rendering_and_delivery",
+            "status": "SKIP",
+            "detail": "No player network connection or client was used"
+          }
+        ],
+        "packets": {
+          "full": {
+            "added": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 5,
+            "encodedBytes": 1292,
+            "removed": 0
+          },
+          "delta": {
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 63,
+            "removed": 0
+          },
+          "mixed": {
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 2,
+            "encodedBytes": 346,
+            "removed": 1
+          },
+          "overlap": {
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 280,
+            "removed": 0
+          },
+          "remove": {
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 37,
+            "removed": 1
+          },
+          "reset": {
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 5,
+            "removed": 0
+          }
+        },
+        "coverage": {
+          "regionOwnership": "NOT_RUN",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix",
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "clientRendering": "NOT_RUN",
+          "entityOwnership": "NOT_RUN"
+        },
+        "folia": true,
+        "adapter": "v26_2_R1",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:07:22.192572Z"
+      }
+    },
+    {
+      "family": "paper",
+      "minecraft": "1.21",
+      "build": 130,
+      "java": "21.0.6",
+      "adapter": "v1_21_R1",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "ab9bb1afc3cea6978a0c03ce8448aa654fe8a9c4dddf341e7cbda1b0edaa73f5",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:05:34.823841500Z",
+        "server": "1.21-130-b1b5d4c (MC: 1.21)",
+        "minecraft": "1.21",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "status": "PASS",
+            "id": "global_scheduler",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "adapter_loading",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "advancement_initialization",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "automatic_layout",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "localized_native_display",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "native_icon_copy",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "localized_toasts_and_announcements",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "native_packet_full",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "native_packet_delta",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "native_packet_mixed",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "native_packet_overlap",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "native_packet_remove",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "native_packet_reset",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "probe_cleanup",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "SKIP",
+            "id": "entity_scheduler_ownership",
+            "required": false,
+            "detail": "No real player task was scheduled; verify separately with a real player"
+          },
+          {
+            "status": "SKIP",
+            "id": "folia_region_ownership",
+            "required": false,
+            "detail": "No world or region tasks were scheduled; verify separately on Folia"
+          },
+          {
+            "status": "SKIP",
+            "id": "client_rendering_and_delivery",
+            "required": false,
+            "detail": "No player network connection or client was used"
+          }
+        ],
+        "packets": {
+          "full": {
+            "encodedBytes": 1304,
+            "progress": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 5,
+            "removed": 0
+          },
+          "delta": {
+            "encodedBytes": 62,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0,
+            "removed": 0
+          },
+          "mixed": {
+            "encodedBytes": 345,
+            "progress": 2,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 1,
+            "removed": 1
+          },
+          "overlap": {
+            "encodedBytes": 279,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 1,
+            "removed": 0
+          },
+          "remove": {
+            "encodedBytes": 36,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0,
+            "removed": 1
+          },
+          "reset": {
+            "encodedBytes": 4,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0,
+            "removed": 0
+          }
+        },
+        "coverage": {
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix",
+          "regionOwnership": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "clientRendering": "NOT_RUN"
+        },
+        "folia": false,
+        "adapter": "v1_21_R1",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:05:36.884514900Z"
+      }
+    },
+    {
+      "family": "paper",
+      "minecraft": "1.21.1",
+      "build": 133,
+      "java": "21.0.6",
+      "adapter": "v1_21_R1",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "39bd8c00b9e18de91dcabd3cc3dcfa5328685a53b7187a2f63280c22e2d287b9",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:05:34.602327200Z",
+        "server": "1.21.1-133-3cb8529 (MC: 1.21.1)",
+        "minecraft": "1.21.1",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "global_scheduler"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "adapter_loading"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "advancement_initialization"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "automatic_layout"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "localized_native_display"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_icon_copy"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "localized_toasts_and_announcements"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_full"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_delta"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_mixed"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_overlap"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_remove"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_reset"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "probe_cleanup"
+          },
+          {
+            "required": false,
+            "detail": "No real player task was scheduled; verify separately with a real player",
+            "status": "SKIP",
+            "id": "entity_scheduler_ownership"
+          },
+          {
+            "required": false,
+            "detail": "No world or region tasks were scheduled; verify separately on Folia",
+            "status": "SKIP",
+            "id": "folia_region_ownership"
+          },
+          {
+            "required": false,
+            "detail": "No player network connection or client was used",
+            "status": "SKIP",
+            "id": "client_rendering_and_delivery"
+          }
+        ],
+        "packets": {
+          "full": {
+            "added": 5,
+            "removed": 0,
+            "encodedBytes": 1304,
+            "progress": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "delta": {
+            "added": 0,
+            "removed": 0,
+            "encodedBytes": 62,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "mixed": {
+            "added": 1,
+            "removed": 1,
+            "encodedBytes": 345,
+            "progress": 2,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "overlap": {
+            "added": 1,
+            "removed": 0,
+            "encodedBytes": 279,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "remove": {
+            "added": 0,
+            "removed": 1,
+            "encodedBytes": 36,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "reset": {
+            "added": 0,
+            "removed": 0,
+            "encodedBytes": 4,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          }
+        },
+        "coverage": {
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix",
+          "regionOwnership": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "clientRendering": "NOT_RUN",
+          "nativePackets": "Construction and native codec round trip; no packets sent to players"
+        },
+        "folia": false,
+        "adapter": "v1_21_R1",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:05:36.701202500Z"
+      }
+    },
+    {
+      "family": "paper",
+      "minecraft": "1.21.3",
+      "build": 83,
+      "java": "21.0.6",
+      "adapter": "v1_21_R2",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "87e973e1d338e869e7fdbc4b8fadc1579d7bb0246a0e0cf6e5700ace6c8bc17e",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:05:34.460799900Z",
+        "server": "1.21.3-83-d6c81da (MC: 1.21.3)",
+        "minecraft": "1.21.3",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "required": true,
+            "id": "global_scheduler",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "adapter_loading",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "advancement_initialization",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "automatic_layout",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "localized_native_display",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_icon_copy",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "localized_toasts_and_announcements",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_full",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_delta",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_mixed",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_overlap",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_remove",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_reset",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "probe_cleanup",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": false,
+            "id": "entity_scheduler_ownership",
+            "status": "SKIP",
+            "detail": "No real player task was scheduled; verify separately with a real player"
+          },
+          {
+            "required": false,
+            "id": "folia_region_ownership",
+            "status": "SKIP",
+            "detail": "No world or region tasks were scheduled; verify separately on Folia"
+          },
+          {
+            "required": false,
+            "id": "client_rendering_and_delivery",
+            "status": "SKIP",
+            "detail": "No player network connection or client was used"
+          }
+        ],
+        "packets": {
+          "full": {
+            "removed": 0,
+            "added": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 5,
+            "encodedBytes": 1304
+          },
+          "delta": {
+            "removed": 0,
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 62
+          },
+          "mixed": {
+            "removed": 1,
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 2,
+            "encodedBytes": 345
+          },
+          "overlap": {
+            "removed": 0,
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 279
+          },
+          "remove": {
+            "removed": 1,
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 36
+          },
+          "reset": {
+            "removed": 0,
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 4
+          }
+        },
+        "coverage": {
+          "entityOwnership": "NOT_RUN",
+          "regionOwnership": "NOT_RUN",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix",
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "clientRendering": "NOT_RUN"
+        },
+        "folia": false,
+        "adapter": "v1_21_R2",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:05:36.512436300Z"
+      }
+    },
+    {
+      "family": "paper",
+      "minecraft": "1.21.4",
+      "build": 232,
+      "java": "21.0.6",
+      "adapter": "v1_21_R3",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "5ee4f542f628a14c644410b08c94ea42e772ef4d29fe92973636b6813d4eaffc",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:05:52.163348100Z",
+        "server": "1.21.4-232-12d8fe0 (MC: 1.21.4)",
+        "minecraft": "1.21.4",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "required": true,
+            "id": "global_scheduler",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "adapter_loading",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "advancement_initialization",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "automatic_layout",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "localized_native_display",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_icon_copy",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "localized_toasts_and_announcements",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_full",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_delta",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_mixed",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_overlap",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_remove",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_reset",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "probe_cleanup",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": false,
+            "id": "entity_scheduler_ownership",
+            "status": "SKIP",
+            "detail": "No real player task was scheduled; verify separately with a real player"
+          },
+          {
+            "required": false,
+            "id": "folia_region_ownership",
+            "status": "SKIP",
+            "detail": "No world or region tasks were scheduled; verify separately on Folia"
+          },
+          {
+            "required": false,
+            "id": "client_rendering_and_delivery",
+            "status": "SKIP",
+            "detail": "No player network connection or client was used"
+          }
+        ],
+        "packets": {
+          "full": {
+            "added": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 5,
+            "encodedBytes": 1304,
+            "removed": 0
+          },
+          "delta": {
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 62,
+            "removed": 0
+          },
+          "mixed": {
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 2,
+            "encodedBytes": 345,
+            "removed": 1
+          },
+          "overlap": {
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 279,
+            "removed": 0
+          },
+          "remove": {
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 36,
+            "removed": 1
+          },
+          "reset": {
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 4,
+            "removed": 0
+          }
+        },
+        "coverage": {
+          "regionOwnership": "NOT_RUN",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix",
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "clientRendering": "NOT_RUN",
+          "entityOwnership": "NOT_RUN"
+        },
+        "folia": false,
+        "adapter": "v1_21_R3",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:05:54.261701400Z"
+      }
+    },
+    {
+      "family": "paper",
+      "minecraft": "1.21.5",
+      "build": 114,
+      "java": "21.0.6",
+      "adapter": "v1_21_R4",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "2ae6ae22adf417699746e0f89fc2ef6cb6ee050a5f6608cee58f0535d60b509e",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:04:30.760971400Z",
+        "server": "1.21.5-114-a1b3058 (MC: 1.21.5)",
+        "minecraft": "1.21.5",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "global_scheduler"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "adapter_loading"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "advancement_initialization"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "automatic_layout"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "localized_native_display"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_icon_copy"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "localized_toasts_and_announcements"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_full"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_delta"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_mixed"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_overlap"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_remove"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_reset"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "probe_cleanup"
+          },
+          {
+            "required": false,
+            "detail": "No real player task was scheduled; verify separately with a real player",
+            "status": "SKIP",
+            "id": "entity_scheduler_ownership"
+          },
+          {
+            "required": false,
+            "detail": "No world or region tasks were scheduled; verify separately on Folia",
+            "status": "SKIP",
+            "id": "folia_region_ownership"
+          },
+          {
+            "required": false,
+            "detail": "No player network connection or client was used",
+            "status": "SKIP",
+            "id": "client_rendering_and_delivery"
+          }
+        ],
+        "packets": {
+          "full": {
+            "removed": 0,
+            "encodedBytes": 1292,
+            "progress": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 5
+          },
+          "delta": {
+            "removed": 0,
+            "encodedBytes": 63,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0
+          },
+          "mixed": {
+            "removed": 1,
+            "encodedBytes": 346,
+            "progress": 2,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 1
+          },
+          "overlap": {
+            "removed": 0,
+            "encodedBytes": 280,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 1
+          },
+          "remove": {
+            "removed": 1,
+            "encodedBytes": 37,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0
+          },
+          "reset": {
+            "removed": 0,
+            "encodedBytes": 5,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0
+          }
+        },
+        "coverage": {
+          "regionOwnership": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "clientRendering": "NOT_RUN",
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix"
+        },
+        "folia": false,
+        "adapter": "v1_21_R4",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:04:32.847924500Z"
+      }
+    },
+    {
+      "family": "paper",
+      "minecraft": "1.21.6",
+      "build": 48,
+      "java": "21.0.6",
+      "adapter": "v1_21_R5",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "35e2dfa66b3491b9d2f0bb033679fa5aca1e1fdf097e7a06a80ce8afeda5c214",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:05:52.983040900Z",
+        "server": "1.21.6-48-4d854e6 (MC: 1.21.6)",
+        "minecraft": "1.21.6",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "id": "global_scheduler",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "adapter_loading",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "advancement_initialization",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "automatic_layout",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "localized_native_display",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "native_icon_copy",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "localized_toasts_and_announcements",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "native_packet_full",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "native_packet_delta",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "native_packet_mixed",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "native_packet_overlap",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "native_packet_remove",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "native_packet_reset",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "probe_cleanup",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "entity_scheduler_ownership",
+            "required": false,
+            "detail": "No real player task was scheduled; verify separately with a real player",
+            "status": "SKIP"
+          },
+          {
+            "id": "folia_region_ownership",
+            "required": false,
+            "detail": "No world or region tasks were scheduled; verify separately on Folia",
+            "status": "SKIP"
+          },
+          {
+            "id": "client_rendering_and_delivery",
+            "required": false,
+            "detail": "No player network connection or client was used",
+            "status": "SKIP"
+          }
+        ],
+        "packets": {
+          "full": {
+            "encodedBytes": 1292,
+            "progress": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 5,
+            "removed": 0
+          },
+          "delta": {
+            "encodedBytes": 63,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0,
+            "removed": 0
+          },
+          "mixed": {
+            "encodedBytes": 346,
+            "progress": 2,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 1,
+            "removed": 1
+          },
+          "overlap": {
+            "encodedBytes": 280,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 1,
+            "removed": 0
+          },
+          "remove": {
+            "encodedBytes": 37,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0,
+            "removed": 1
+          },
+          "reset": {
+            "encodedBytes": 5,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0,
+            "removed": 0
+          }
+        },
+        "coverage": {
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix",
+          "regionOwnership": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "clientRendering": "NOT_RUN"
+        },
+        "folia": false,
+        "adapter": "v1_21_R5",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:05:55.098145200Z"
+      }
+    },
+    {
+      "family": "paper",
+      "minecraft": "1.21.7",
+      "build": 32,
+      "java": "21.0.6",
+      "adapter": "v1_21_R5",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "83838188699cb2837e55b890fb1a1d39ad0710285ed633fbf9fc14e9f47ce078",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:05:53.702375200Z",
+        "server": "1.21.7-32-e792779 (MC: 1.21.7)",
+        "minecraft": "1.21.7",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "status": "PASS",
+            "id": "global_scheduler",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "adapter_loading",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "advancement_initialization",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "automatic_layout",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "localized_native_display",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "native_icon_copy",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "localized_toasts_and_announcements",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "native_packet_full",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "native_packet_delta",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "native_packet_mixed",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "native_packet_overlap",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "native_packet_remove",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "native_packet_reset",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "PASS",
+            "id": "probe_cleanup",
+            "required": true,
+            "detail": "Verified on the running server"
+          },
+          {
+            "status": "SKIP",
+            "id": "entity_scheduler_ownership",
+            "required": false,
+            "detail": "No real player task was scheduled; verify separately with a real player"
+          },
+          {
+            "status": "SKIP",
+            "id": "folia_region_ownership",
+            "required": false,
+            "detail": "No world or region tasks were scheduled; verify separately on Folia"
+          },
+          {
+            "status": "SKIP",
+            "id": "client_rendering_and_delivery",
+            "required": false,
+            "detail": "No player network connection or client was used"
+          }
+        ],
+        "packets": {
+          "full": {
+            "encodedBytes": 1292,
+            "progress": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 5,
+            "removed": 0
+          },
+          "delta": {
+            "encodedBytes": 63,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0,
+            "removed": 0
+          },
+          "mixed": {
+            "encodedBytes": 346,
+            "progress": 2,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 1,
+            "removed": 1
+          },
+          "overlap": {
+            "encodedBytes": 280,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 1,
+            "removed": 0
+          },
+          "remove": {
+            "encodedBytes": 37,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0,
+            "removed": 1
+          },
+          "reset": {
+            "encodedBytes": 5,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0,
+            "removed": 0
+          }
+        },
+        "coverage": {
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix",
+          "regionOwnership": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "clientRendering": "NOT_RUN"
+        },
+        "folia": false,
+        "adapter": "v1_21_R5",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:05:55.822248600Z"
+      }
+    },
+    {
+      "family": "paper",
+      "minecraft": "1.21.8",
+      "build": 60,
+      "java": "21.0.6",
+      "adapter": "v1_21_R5",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "8de7c52c3b02403503d16fac58003f1efef7dd7a0256786843927fa92ee57f1e",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:06:10.762569300Z",
+        "server": "1.21.8-60-29c8822 (MC: 1.21.8)",
+        "minecraft": "1.21.8",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "id": "global_scheduler",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "adapter_loading",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "advancement_initialization",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "automatic_layout",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "localized_native_display",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_icon_copy",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "localized_toasts_and_announcements",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_full",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_delta",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_mixed",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_overlap",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_remove",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_reset",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "probe_cleanup",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "entity_scheduler_ownership",
+            "status": "SKIP",
+            "detail": "No real player task was scheduled; verify separately with a real player",
+            "required": false
+          },
+          {
+            "id": "folia_region_ownership",
+            "status": "SKIP",
+            "detail": "No world or region tasks were scheduled; verify separately on Folia",
+            "required": false
+          },
+          {
+            "id": "client_rendering_and_delivery",
+            "status": "SKIP",
+            "detail": "No player network connection or client was used",
+            "required": false
+          }
+        ],
+        "packets": {
+          "full": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 5,
+            "encodedBytes": 1292,
+            "removed": 0,
+            "added": 5
+          },
+          "delta": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 63,
+            "removed": 0,
+            "added": 0
+          },
+          "mixed": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 2,
+            "encodedBytes": 346,
+            "removed": 1,
+            "added": 1
+          },
+          "overlap": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 280,
+            "removed": 0,
+            "added": 1
+          },
+          "remove": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 37,
+            "removed": 1,
+            "added": 0
+          },
+          "reset": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 5,
+            "removed": 0,
+            "added": 0
+          }
+        },
+        "coverage": {
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix",
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "clientRendering": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "regionOwnership": "NOT_RUN"
+        },
+        "folia": false,
+        "adapter": "v1_21_R5",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:06:12.879862900Z"
+      }
+    },
+    {
+      "family": "paper",
+      "minecraft": "1.21.9",
+      "build": 59,
+      "java": "21.0.6",
+      "adapter": "v1_21_R6",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "aec002e77c7566e49494fdf05430b96078ffd1d7430e652d4f338fef951e7a10",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:06:12.963007200Z",
+        "server": "1.21.9-59-0ff899d (MC: 1.21.9)",
+        "minecraft": "1.21.9",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "required": true,
+            "id": "global_scheduler",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "adapter_loading",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "advancement_initialization",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "automatic_layout",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "localized_native_display",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_icon_copy",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "localized_toasts_and_announcements",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_full",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_delta",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_mixed",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_overlap",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_remove",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "native_packet_reset",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": true,
+            "id": "probe_cleanup",
+            "status": "PASS",
+            "detail": "Verified on the running server"
+          },
+          {
+            "required": false,
+            "id": "entity_scheduler_ownership",
+            "status": "SKIP",
+            "detail": "No real player task was scheduled; verify separately with a real player"
+          },
+          {
+            "required": false,
+            "id": "folia_region_ownership",
+            "status": "SKIP",
+            "detail": "No world or region tasks were scheduled; verify separately on Folia"
+          },
+          {
+            "required": false,
+            "id": "client_rendering_and_delivery",
+            "status": "SKIP",
+            "detail": "No player network connection or client was used"
+          }
+        ],
+        "packets": {
+          "full": {
+            "added": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 5,
+            "encodedBytes": 1292,
+            "removed": 0
+          },
+          "delta": {
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 63,
+            "removed": 0
+          },
+          "mixed": {
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 2,
+            "encodedBytes": 346,
+            "removed": 1
+          },
+          "overlap": {
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 280,
+            "removed": 0
+          },
+          "remove": {
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 37,
+            "removed": 1
+          },
+          "reset": {
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 5,
+            "removed": 0
+          }
+        },
+        "coverage": {
+          "regionOwnership": "NOT_RUN",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix",
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "clientRendering": "NOT_RUN",
+          "entityOwnership": "NOT_RUN"
+        },
+        "folia": false,
+        "adapter": "v1_21_R6",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:06:15.070266100Z"
+      }
+    },
+    {
+      "family": "paper",
+      "minecraft": "1.21.10",
+      "build": 130,
+      "java": "21.0.6",
+      "adapter": "v1_21_R6",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "158703f75a26f842ea656b3dc6d75bf3d1ec176b97a2c36384d0b80b3871af53",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:06:14.404841300Z",
+        "server": "1.21.10-130-8043efd (MC: 1.21.10)",
+        "minecraft": "1.21.10",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "global_scheduler"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "adapter_loading"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "advancement_initialization"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "automatic_layout"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "localized_native_display"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_icon_copy"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "localized_toasts_and_announcements"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_full"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_delta"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_mixed"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_overlap"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_remove"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_reset"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "probe_cleanup"
+          },
+          {
+            "required": false,
+            "detail": "No real player task was scheduled; verify separately with a real player",
+            "status": "SKIP",
+            "id": "entity_scheduler_ownership"
+          },
+          {
+            "required": false,
+            "detail": "No world or region tasks were scheduled; verify separately on Folia",
+            "status": "SKIP",
+            "id": "folia_region_ownership"
+          },
+          {
+            "required": false,
+            "detail": "No player network connection or client was used",
+            "status": "SKIP",
+            "id": "client_rendering_and_delivery"
+          }
+        ],
+        "packets": {
+          "full": {
+            "added": 5,
+            "removed": 0,
+            "encodedBytes": 1292,
+            "progress": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "delta": {
+            "added": 0,
+            "removed": 0,
+            "encodedBytes": 63,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "mixed": {
+            "added": 1,
+            "removed": 1,
+            "encodedBytes": 346,
+            "progress": 2,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "overlap": {
+            "added": 1,
+            "removed": 0,
+            "encodedBytes": 280,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "remove": {
+            "added": 0,
+            "removed": 1,
+            "encodedBytes": 37,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "reset": {
+            "added": 0,
+            "removed": 0,
+            "encodedBytes": 5,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          }
+        },
+        "coverage": {
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix",
+          "regionOwnership": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "clientRendering": "NOT_RUN",
+          "nativePackets": "Construction and native codec round trip; no packets sent to players"
+        },
+        "folia": false,
+        "adapter": "v1_21_R6",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:06:16.542398Z"
+      }
+    },
+    {
+      "family": "paper",
+      "minecraft": "1.21.11",
+      "build": 132,
+      "java": "21.0.6",
+      "adapter": "v1_21_R7",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "5ffef465eeeb5f2a3c23a24419d97c51afd7dbb4923ff42df9a3f58bba1ccfba",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:06:30.225559400Z",
+        "server": "1.21.11-132-c5eb079 (MC: 1.21.11)",
+        "minecraft": "1.21.11",
+        "java": "21.0.6",
+        "checks": [
+          {
+            "detail": "Verified on the running server",
+            "required": true,
+            "id": "global_scheduler",
+            "status": "PASS"
+          },
+          {
+            "detail": "Verified on the running server",
+            "required": true,
+            "id": "adapter_loading",
+            "status": "PASS"
+          },
+          {
+            "detail": "Verified on the running server",
+            "required": true,
+            "id": "advancement_initialization",
+            "status": "PASS"
+          },
+          {
+            "detail": "Verified on the running server",
+            "required": true,
+            "id": "automatic_layout",
+            "status": "PASS"
+          },
+          {
+            "detail": "Verified on the running server",
+            "required": true,
+            "id": "localized_native_display",
+            "status": "PASS"
+          },
+          {
+            "detail": "Verified on the running server",
+            "required": true,
+            "id": "native_icon_copy",
+            "status": "PASS"
+          },
+          {
+            "detail": "Verified on the running server",
+            "required": true,
+            "id": "localized_toasts_and_announcements",
+            "status": "PASS"
+          },
+          {
+            "detail": "Verified on the running server",
+            "required": true,
+            "id": "native_packet_full",
+            "status": "PASS"
+          },
+          {
+            "detail": "Verified on the running server",
+            "required": true,
+            "id": "native_packet_delta",
+            "status": "PASS"
+          },
+          {
+            "detail": "Verified on the running server",
+            "required": true,
+            "id": "native_packet_mixed",
+            "status": "PASS"
+          },
+          {
+            "detail": "Verified on the running server",
+            "required": true,
+            "id": "native_packet_overlap",
+            "status": "PASS"
+          },
+          {
+            "detail": "Verified on the running server",
+            "required": true,
+            "id": "native_packet_remove",
+            "status": "PASS"
+          },
+          {
+            "detail": "Verified on the running server",
+            "required": true,
+            "id": "native_packet_reset",
+            "status": "PASS"
+          },
+          {
+            "detail": "Verified on the running server",
+            "required": true,
+            "id": "probe_cleanup",
+            "status": "PASS"
+          },
+          {
+            "detail": "No real player task was scheduled; verify separately with a real player",
+            "required": false,
+            "id": "entity_scheduler_ownership",
+            "status": "SKIP"
+          },
+          {
+            "detail": "No world or region tasks were scheduled; verify separately on Folia",
+            "required": false,
+            "id": "folia_region_ownership",
+            "status": "SKIP"
+          },
+          {
+            "detail": "No player network connection or client was used",
+            "required": false,
+            "id": "client_rendering_and_delivery",
+            "status": "SKIP"
+          }
+        ],
+        "packets": {
+          "full": {
+            "removed": 0,
+            "added": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 5,
+            "encodedBytes": 1292
+          },
+          "delta": {
+            "removed": 0,
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 63
+          },
+          "mixed": {
+            "removed": 1,
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 2,
+            "encodedBytes": 346
+          },
+          "overlap": {
+            "removed": 0,
+            "added": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 280
+          },
+          "remove": {
+            "removed": 1,
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 37
+          },
+          "reset": {
+            "removed": 0,
+            "added": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 5
+          }
+        },
+        "coverage": {
+          "clientRendering": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "regionOwnership": "NOT_RUN",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix",
+          "nativePackets": "Construction and native codec round trip; no packets sent to players"
+        },
+        "folia": false,
+        "adapter": "v1_21_R7",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:06:32.339179200Z"
+      }
+    },
+    {
+      "family": "paper",
+      "minecraft": "26.1.1",
+      "build": 29,
+      "java": "25.0.3",
+      "adapter": "v26_1_R2",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "43d08ed52c7af4e9f72769122501a5c15f99c7ace0c428a3eef040fd3f6fdbc5",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:06:27.978197200Z",
+        "server": "26.1.1-29-77c0866 (MC: 26.1.1)",
+        "minecraft": "26.1.1",
+        "java": "25.0.3",
+        "checks": [
+          {
+            "id": "global_scheduler",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "adapter_loading",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "advancement_initialization",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "automatic_layout",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "localized_native_display",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_icon_copy",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "localized_toasts_and_announcements",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_full",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_delta",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_mixed",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_overlap",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_remove",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_reset",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "probe_cleanup",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "entity_scheduler_ownership",
+            "status": "SKIP",
+            "detail": "No real player task was scheduled; verify separately with a real player",
+            "required": false
+          },
+          {
+            "id": "folia_region_ownership",
+            "status": "SKIP",
+            "detail": "No world or region tasks were scheduled; verify separately on Folia",
+            "required": false
+          },
+          {
+            "id": "client_rendering_and_delivery",
+            "status": "SKIP",
+            "detail": "No player network connection or client was used",
+            "required": false
+          }
+        ],
+        "packets": {
+          "full": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 5,
+            "encodedBytes": 1292,
+            "removed": 0,
+            "added": 5
+          },
+          "delta": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 63,
+            "removed": 0,
+            "added": 0
+          },
+          "mixed": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 2,
+            "encodedBytes": 346,
+            "removed": 1,
+            "added": 1
+          },
+          "overlap": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 280,
+            "removed": 0,
+            "added": 1
+          },
+          "remove": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 37,
+            "removed": 1,
+            "added": 0
+          },
+          "reset": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 5,
+            "removed": 0,
+            "added": 0
+          }
+        },
+        "coverage": {
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "clientRendering": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "regionOwnership": "NOT_RUN",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix"
+        },
+        "folia": false,
+        "adapter": "v26_1_R2",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:06:30.248101Z"
+      }
+    },
+    {
+      "family": "paper",
+      "minecraft": "26.1.2",
+      "build": 74,
+      "java": "25.0.3",
+      "adapter": "v26_1_R2",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "1d70b1dab9cf4a6de615209a536f3a45a2186240253c428213ce2188ab95e5f7",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:06:29.521999700Z",
+        "server": "26.1.2-74-e4e17fc (MC: 26.1.2)",
+        "minecraft": "26.1.2",
+        "java": "25.0.3",
+        "checks": [
+          {
+            "id": "global_scheduler",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "adapter_loading",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "advancement_initialization",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "automatic_layout",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "localized_native_display",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_icon_copy",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "localized_toasts_and_announcements",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_full",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_delta",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_mixed",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_overlap",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_remove",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "native_packet_reset",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "probe_cleanup",
+            "status": "PASS",
+            "detail": "Verified on the running server",
+            "required": true
+          },
+          {
+            "id": "entity_scheduler_ownership",
+            "status": "SKIP",
+            "detail": "No real player task was scheduled; verify separately with a real player",
+            "required": false
+          },
+          {
+            "id": "folia_region_ownership",
+            "status": "SKIP",
+            "detail": "No world or region tasks were scheduled; verify separately on Folia",
+            "required": false
+          },
+          {
+            "id": "client_rendering_and_delivery",
+            "status": "SKIP",
+            "detail": "No player network connection or client was used",
+            "required": false
+          }
+        ],
+        "packets": {
+          "full": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 5,
+            "encodedBytes": 1292,
+            "removed": 0,
+            "added": 5
+          },
+          "delta": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 63,
+            "removed": 0,
+            "added": 0
+          },
+          "mixed": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 2,
+            "encodedBytes": 346,
+            "removed": 1,
+            "added": 1
+          },
+          "overlap": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 1,
+            "encodedBytes": 280,
+            "removed": 0,
+            "added": 1
+          },
+          "remove": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 37,
+            "removed": 1,
+            "added": 0
+          },
+          "reset": {
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "progress": 0,
+            "encodedBytes": 5,
+            "removed": 0,
+            "added": 0
+          }
+        },
+        "coverage": {
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "clientRendering": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "regionOwnership": "NOT_RUN",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix"
+        },
+        "folia": false,
+        "adapter": "v26_1_R2",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:06:31.702154Z"
+      }
+    },
+    {
+      "family": "paper",
+      "minecraft": "26.2",
+      "build": 129,
+      "java": "25.0.3",
+      "adapter": "v26_2_R1",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "b1d8f6bfa1b6101fa8e947b53041cb3bdf5540e7b83b6547ca19ba7edefeb083",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:07:06.148488900Z",
+        "server": "26.2-129-9240f58 (MC: 26.2)",
+        "minecraft": "26.2",
+        "java": "25.0.3",
+        "checks": [
+          {
+            "id": "global_scheduler",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "adapter_loading",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "advancement_initialization",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "automatic_layout",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "localized_native_display",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "native_icon_copy",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "localized_toasts_and_announcements",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "native_packet_full",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "native_packet_delta",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "native_packet_mixed",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "native_packet_overlap",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "native_packet_remove",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "native_packet_reset",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "probe_cleanup",
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS"
+          },
+          {
+            "id": "entity_scheduler_ownership",
+            "required": false,
+            "detail": "No real player task was scheduled; verify separately with a real player",
+            "status": "SKIP"
+          },
+          {
+            "id": "folia_region_ownership",
+            "required": false,
+            "detail": "No world or region tasks were scheduled; verify separately on Folia",
+            "status": "SKIP"
+          },
+          {
+            "id": "client_rendering_and_delivery",
+            "required": false,
+            "detail": "No player network connection or client was used",
+            "status": "SKIP"
+          }
+        ],
+        "packets": {
+          "full": {
+            "encodedBytes": 1292,
+            "progress": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 5,
+            "removed": 0
+          },
+          "delta": {
+            "encodedBytes": 63,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0,
+            "removed": 0
+          },
+          "mixed": {
+            "encodedBytes": 346,
+            "progress": 2,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 1,
+            "removed": 1
+          },
+          "overlap": {
+            "encodedBytes": 280,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 1,
+            "removed": 0
+          },
+          "remove": {
+            "encodedBytes": 37,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0,
+            "removed": 1
+          },
+          "reset": {
+            "encodedBytes": 5,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket",
+            "added": 0,
+            "removed": 0
+          }
+        },
+        "coverage": {
+          "nativePackets": "Construction and native codec round trip; no packets sent to players",
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix",
+          "regionOwnership": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "clientRendering": "NOT_RUN"
+        },
+        "folia": false,
+        "adapter": "v26_2_R1",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:07:08.374310800Z"
+      }
+    },
+    {
+      "family": "paper",
+      "minecraft": "26.3",
+      "build": 140,
+      "java": "25.0.3",
+      "adapter": "v26_3_R1",
+      "overall": "PASS",
+      "shutdown": "STDIN_STOP",
+      "exitCode": 0,
+      "launcherSha256": "98aabc113a80b9b5e183475e839a17cf99c39c915a1f46b8f35a5e89fd5de0f1",
+      "nativeReport": {
+        "schemaVersion": 1,
+        "startedAt": "2026-10-04T12:07:19.817208500Z",
+        "server": "26.3-140-977da0d (MC: 26.3)",
+        "minecraft": "26.3",
+        "java": "25.0.3",
+        "checks": [
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "global_scheduler"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "adapter_loading"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "advancement_initialization"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "automatic_layout"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "localized_native_display"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_icon_copy"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "localized_toasts_and_announcements"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_full"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_delta"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_mixed"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_overlap"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_remove"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "native_packet_reset"
+          },
+          {
+            "required": true,
+            "detail": "Verified on the running server",
+            "status": "PASS",
+            "id": "probe_cleanup"
+          },
+          {
+            "required": false,
+            "detail": "No real player task was scheduled; verify separately with a real player",
+            "status": "SKIP",
+            "id": "entity_scheduler_ownership"
+          },
+          {
+            "required": false,
+            "detail": "No world or region tasks were scheduled; verify separately on Folia",
+            "status": "SKIP",
+            "id": "folia_region_ownership"
+          },
+          {
+            "required": false,
+            "detail": "No player network connection or client was used",
+            "status": "SKIP",
+            "id": "client_rendering_and_delivery"
+          }
+        ],
+        "packets": {
+          "full": {
+            "added": 5,
+            "removed": 0,
+            "encodedBytes": 1292,
+            "progress": 5,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "delta": {
+            "added": 0,
+            "removed": 0,
+            "encodedBytes": 63,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "mixed": {
+            "added": 1,
+            "removed": 1,
+            "encodedBytes": 346,
+            "progress": 2,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "overlap": {
+            "added": 1,
+            "removed": 0,
+            "encodedBytes": 280,
+            "progress": 1,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "remove": {
+            "added": 0,
+            "removed": 1,
+            "encodedBytes": 37,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          },
+          "reset": {
+            "added": 0,
+            "removed": 0,
+            "encodedBytes": 5,
+            "progress": 0,
+            "nativeClass": "net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket"
+          }
+        },
+        "coverage": {
+          "nativeAdapters": "Current server adapter only; aggregate separate runs for the matrix",
+          "regionOwnership": "NOT_RUN",
+          "entityOwnership": "NOT_RUN",
+          "clientRendering": "NOT_RUN",
+          "nativePackets": "Construction and native codec round trip; no packets sent to players"
+        },
+        "folia": false,
+        "adapter": "v26_3_R1",
+        "apiVersion": "2.8.1-pro.3",
+        "advertisedAdapters": [
+          "v1_21_R1",
+          "v1_21_R2",
+          "v1_21_R3",
+          "v1_21_R4",
+          "v1_21_R5",
+          "v1_21_R6",
+          "v1_21_R7",
+          "v26_1_R2",
+          "v26_2_R1",
+          "v26_3_R1"
+        ],
+        "success": true,
+        "overall": "PASS",
+        "scope": "native_initialization_codec_and_global_scheduler",
+        "finishedAt": "2026-10-04T12:07:22.024598800Z"
+      }
+    }
+  ],
+  "notRun": [
+    {
+      "family": "paper",
+      "minecraft": "1.21.2",
+      "status": "NOT_RUN",
+      "reason": "No official launcher was available from the queried download API."
+    },
+    {
+      "family": "paper",
+      "minecraft": "26.1",
+      "status": "NOT_RUN",
+      "reason": "No official launcher was available from the queried download API."
+    },
+    {
+      "family": "folia",
+      "minecraft": "1.21.1",
+      "status": "NOT_RUN",
+      "reason": "No official launcher was available from the queried download API."
+    },
+    {
+      "family": "folia",
+      "minecraft": "26.3",
+      "status": "NOT_RUN",
+      "reason": "No official launcher was available from the queried download API."
+    }
+  ]
+}

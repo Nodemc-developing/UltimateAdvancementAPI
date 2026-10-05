@@ -3,7 +3,7 @@ package com.fren_gor.ultimateAdvancementAPI.nms.v1_21_R3;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
+import com.fren_gor.ultimateAdvancementAPI.nms.util.NativeComponentBridge;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.AdvancementRequirements;
@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 public class Util {
+
+    private static final java.util.function.Function<BaseComponent, Component> COMPONENT_CONVERTER =
+            NativeComponentBridge.converter(CraftChatMessage.class, CraftChatMessage::fromJSONOrNull);
 
     @NotNull
     public static Map<String, Criterion<?>> getAdvancementCriteria(@Range(from = 1, to = Integer.MAX_VALUE) int maxProgression) {
@@ -81,7 +84,7 @@ public class Util {
         if (component == null) {
             return CommonComponents.EMPTY;
         }
-        Component base = CraftChatMessage.fromJSONOrNull(ComponentSerializer.toString(component));
+        Component base = COMPONENT_CONVERTER.apply(component);
         return base == null ? CommonComponents.EMPTY : base;
     }
 

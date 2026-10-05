@@ -42,3 +42,5 @@ hs_err_pid*
 build/
 !gradle/wrapper/gradle-wrapper.jar
 .local/
+__pycache__/
+*.pyc

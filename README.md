@@ -1,24 +1,23 @@
 # UltimateAdvancementAPI
 
-[![Build Status main Branch](https://jenkins.frengor.com/job/UltimateAdvancementAPI/job/main/badge/icon?subject=main&style=flat)](https://jenkins.frengor.com/job/UltimateAdvancementAPI/job/main/)
-[![Build Status dev Branch](https://jenkins.frengor.com/job/UltimateAdvancementAPI/job/dev/badge/icon?subject=dev&style=flat)](https://jenkins.frengor.com/job/UltimateAdvancementAPI/job/dev/)
-[![License](https://img.shields.io/badge/license-LGPL--3.0-orange?style=flat)](https://github.com/frengor/UltimateAdvancementAPI/blob/main/LGPL)
-[![Version](https://img.shields.io/github/v/tag/frengor/UltimateAdvancementAPI?sort=date&filter=!*beta*&style=flat&label=version&color=blue)](https://github.com/frengor/UltimateAdvancementAPI/tags)
-[![Issues](https://img.shields.io/github/issues/frengor/UltimateAdvancementAPI?style=flat)](https://github.com/frengor/UltimateAdvancementAPI/issues)
-[![Stars](https://img.shields.io/github/stars/frengor/UltimateAdvancementAPI?style=flat)](https://github.com/frengor/UltimateAdvancementAPI/stargazers)
-[![Forks](https://img.shields.io/github/forks/frengor/UltimateAdvancementAPI?style=flat)](https://github.com/frengor/UltimateAdvancementAPI/network)
-[![Contributors](https://img.shields.io/github/contributors/frengor/UltimateAdvancementAPI?style=flat)](https://github.com/frengor/UltimateAdvancementAPI/graphs/contributors)
+[![Release](https://img.shields.io/github/v/release/Nodemc-developing/UltimateAdvancementAPI?style=flat&label=release)](https://github.com/Nodemc-developing/UltimateAdvancementAPI/releases)
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.21%E2%80%9326.3-green?style=flat)](COMPATIBILITY.md)
+[![Platforms](https://img.shields.io/badge/platforms-Paper%20%7C%20Folia-blue?style=flat)](COMPATIBILITY.md)
+[![License](https://img.shields.io/badge/license-LGPL--3.0-orange?style=flat)](LGPL)
 
 A powerful API to create custom advancements for your Minecraft server.
 
-This fork also provides a Gradle-built modern distribution with Folia scheduling, ordered database persistence and Minecraft 26.3 support. See [MODERN_BUILD.md](MODERN_BUILD.md) for build instructions and the compatibility and verification scope.
+This fork provides one Gradle-built installation JAR for Paper/Folia 1.21.x through 26.3, with Folia scheduling and ordered database persistence. See [COMPATIBILITY.md](COMPATIBILITY.md) for exact version groups and recorded checks, and [MODERN_BUILD.md](MODERN_BUILD.md) for build instructions.
+
+**Release:** [2.8.1-pro.3](https://github.com/Nodemc-developing/UltimateAdvancementAPI/releases/tag/v2.8.1-pro.3). Install `UltimateAdvancementAPI-Plugin-2.8.1-pro.3.jar` as a separate plugin. The same release includes the complete source ZIP and verification ZIP. All features are free and open source.
+
+The release retains the installation JAR verified on 2026-10-04: 54 unit tests, 15 packaging checks and 21 recorded Paper/Folia native runs. Untested versions and live-client limitations remain explicit in the compatibility matrix; publishing does not add new test results.
+
+CraftEngine is not a dependency of this API. Using CraftEngine 26.9.2 alongside it requires no CraftEngine-specific UAA adapter; consumer plugins manage their own CraftEngine integration.
 
 ![Advancement Tab Image](https://github.com/frengor/UltimateAdvancementAPI/wiki/images/spigot-photo.png)
 
-> [!IMPORTANT]
-> **3.0.0 Beta** is available on the [`main-3.0.0` branch](https://github.com/frengor/UltimateAdvancementAPI/tree/main-3.0.0). Download the beta from
-> Modrinth on Hangar (links below).  
-> The Javadoc for the beta is published [here](https://frengor.com/javadocs/UltimateAdvancementAPI/3.0.0-beta-3/).
+The following links belong to the original project and its community; download this fork's installation JAR from the release above.
 
 **Modrinth Page:** <https://modrinth.com/plugin/ultimateadvancementapi>  
 **Spigot Page:** <https://www.spigotmc.org/resources/95585/>  
@@ -29,7 +28,9 @@ This fork also provides a Gradle-built modern distribution with Folia scheduling
 **Javadoc:** <https://frengor.com/javadocs/UltimateAdvancementAPI/latest/>  
 **Jenkins:** <https://jenkins.frengor.com/job/UltimateAdvancementAPI/>
 
-**Get it with maven:**
+**Original Maven API dependency:**
+
+These coordinates provide the original `2.8.1` API. They do not distribute this fork's `2.8.1-pro.3` installation JAR or its complete modern adapter set. Use this release's JAR as a provided/compile-only dependency when using fork-specific APIs.
 
 ```xml
 <repositories>
@@ -63,14 +64,14 @@ The plugin used for tests can be found [here](https://github.com/frengor/Ultimat
 
 Feel free to open issues or pull requests. Feature requests can be done opening an issue, the `enhancement` tag will be applied by maintainers.
 
-For pull requests, open them towards the `dev` branch, as the `main` branch is only for releases. Make sure to allow edits by maintainers.
+For pull requests to this fork, target `main`. Make sure to allow edits by maintainers.
 Also, if possible please use the formatting style settings present in the `.editorconfig` file. If you are using an IDE like IntelliJ, they should be
 picked up automatically.
 Otherwise, try to manually keep the style as consistent as possible in regard to the surrounding code.
 
 ## Required Java version
 
-Currently, the project is compiled for Java 16, although the minimum required Java version might change in future releases.
+The Common API and original Maven distribution retain Java 16 bytecode. The Gradle distribution uses Java 21 for its entry point and 1.21 adapters, and Java 25 for its 26.x adapters. Run 1.21 servers on Java 21 or a server-supported newer runtime, and 26.x servers on Java 25 or newer.
 
 > We consider changing the minimum required Java version a breaking change, so DO NOT expect it to be frequently modified.
 

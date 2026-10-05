@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.logging.Level;
 
 /**
  * <a href="https://github.com/JorelAli/CommandAPI">CommandAPI</a> manager, which loads the correct version of the API
@@ -36,7 +37,8 @@ public class CommandAPIManager {
      * Loads the correct version of the API and the correct implementation of the commands.
      *
      * @param libbyManager The {@link LibraryManager} lo load the <a href="https://github.com/JorelAli/CommandAPI">CommandAPI</a>.
-     * @return The {@link ILoadable} to be loaded and enabled, or {@code null} if the NMS version is not supported.
+     * @return The {@link ILoadable} to be loaded and enabled, or {@code null} if the NMS version is not supported
+     *     or the command library cannot be loaded on the current server.
      */
     @Nullable
     public static ILoadable loadManager(@NotNull LibraryManager libbyManager) {
@@ -50,37 +52,25 @@ public class CommandAPIManager {
 
         CommandAPIVersion ver = verOpt.get();
 
-        // Download correct version of CommandAPI
-        libbyManager.addMavenCentral();
-        Library commandAPILibrary = Library.builder()
-            .groupId("dev{}jorel")
-            .artifactId(ver.getArtifactId())
-            .version(ver.getVersion())
-            .checksum(ver.getChecksum())
-            .relocate("dev{}jorel{}commandapi", "dev.jorel.commandapi") // Should be changed by shading
-            .build();
         try {
+            // Keep dependency injection and class resolution inside the fallback boundary. A command
+            // library compiled for another Java/server version can fail with a LinkageError here.
+            libbyManager.addMavenCentral();
+            Library commandAPILibrary = Library.builder()
+                .groupId("dev{}jorel")
+                .artifactId(ver.getArtifactId())
+                .version(ver.getVersion())
+                .checksum(ver.getChecksum())
+                .relocate("dev{}jorel{}commandapi", "dev.jorel.commandapi") // Should be changed by shading
+                .build();
             libbyManager.loadLibrary(commandAPILibrary);
-        } catch (Exception e) {
-            Bukkit.getLogger().warning("[UltimateAdvancementAPI-Commands] Can't load library " + commandAPILibrary.toString() + '!');
-            e.printStackTrace();
-            return null;
-        }
 
-        String manager = "com.fren_gor.ultimateAdvancementAPI.commands.commandAPI_v" + ver.getClasspathSuffix() + ".CommandAPIManager";
-        Class<?> clazz;
-        try {
-            clazz = Class.forName(manager);
-        } catch (ClassNotFoundException e) {
-            Bukkit.getLogger().info("[UltimateAdvancementAPI-Commands] Can't find CommandAPIManager Class! (" + manager + ")");
-            e.printStackTrace();
-            return null;
-        }
-
-        try {
+            String manager = "com.fren_gor.ultimateAdvancementAPI.commands.commandAPI_v" + ver.getClasspathSuffix() + ".CommandAPIManager";
+            Class<?> clazz = Class.forName(manager);
             return new CommonLoadable((ILoadable) clazz.getDeclaredConstructor().newInstance());
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
+        } catch (Exception | LinkageError error) {
+            Bukkit.getLogger().log(Level.WARNING, "[UltimateAdvancementAPI-Commands] Can't load CommandAPI "
+                + ver.getVersion() + "; using the native command fallback.", error);
             return null;
         }
     }

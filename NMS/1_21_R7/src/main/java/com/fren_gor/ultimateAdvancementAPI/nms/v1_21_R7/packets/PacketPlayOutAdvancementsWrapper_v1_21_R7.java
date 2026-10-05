@@ -42,6 +42,19 @@ public class PacketPlayOutAdvancementsWrapper_v1_21_R7 extends PacketPlayOutAdva
         this.packet = new ClientboundUpdateAdvancementsPacket(false, Collections.emptyList(), (Set<Identifier>) ListSet.fromWrapperSet(toRemove), Collections.emptyMap(), true);
     }
 
+    public PacketPlayOutAdvancementsWrapper_v1_21_R7(Map<AdvancementWrapper, Integer> added, Set<MinecraftKeyWrapper> removed, Map<AdvancementWrapper, Integer> progress) {
+        Map<Identifier, AdvancementProgress> changes = Maps.newHashMapWithExpectedSize(progress.size() + added.size());
+        Map<AdvancementWrapper, Integer> all = new java.util.HashMap<>(progress);
+        all.putAll(added);
+        for (Entry<AdvancementWrapper, Integer> entry : all.entrySet()) {
+            AdvancementWrapper advancement = entry.getKey();
+            changes.put((Identifier) advancement.getKey().toNMS(), Util.getAdvancementProgress((AdvancementHolder) advancement.toNMS(), entry.getValue()));
+        }
+        var definitions = added.keySet().stream().map(adv -> (AdvancementHolder) adv.toNMS()).toList();
+        Set<Identifier> removals = removed.stream().map(key -> (Identifier) key.toNMS()).collect(java.util.stream.Collectors.toSet());
+        packet = new ClientboundUpdateAdvancementsPacket(false, definitions, removals, changes, true);
+    }
+
     @Override
     public void sendTo(@NotNull Player player) {
         Util.sendTo(player, packet);
